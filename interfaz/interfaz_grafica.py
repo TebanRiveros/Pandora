@@ -62,18 +62,28 @@ class Login:
 class VentanaSimulacion():
     def __init__(self):
         self.root = ctk.CTk()
-        self.root.geometry("400x300")
+        self.root.geometry("900x600")
         self.root.title('Pandora S')
         wtotal = self.root.winfo_screenwidth()
         htotal = self.root.winfo_screenheight()
 
-        wventana = 400
-        hventana = 300
+        wventana = 900
+        hventana = 600
 
         pwidth = round(wtotal/2-wventana/2)
         pheight = round(htotal/2-hventana/2)
 
         self.root.geometry(str(wventana)+"x"+str(hventana)+"+"+str(pwidth)+"+"+str(pheight))
+
+        self.menu = ctk.CTkFrame(self.root, fg_color="blue")
+        self.menu.pack(side=ctk.LEFT, fill='both', expand=False)
+
+        emulador=ctk.CTkImage(light_image=Image.open(os.path.join(carpeta_imagenes, "imagen1.png")),dark_image=Image.open(os.path.join(carpeta_imagenes, "imagen1.png")), size=(150,60))
+        # Display the image
+        image_label = ctk.CTkLabel(self.menu, text="", image=emulador)
+        image_label.pack()
+
+
         self.root.mainloop()
 
 
@@ -82,7 +92,7 @@ class VentanaSimulacion():
 class VentanaDiseno():
     def __init__(self):
         self.root = ctk.CTk()
-        self.root.geometry("400x300")
+        self.root.geometry("500x400")
         self.root.title('Pandora D')
         wtotal = self.root.winfo_screenwidth()
         htotal = self.root.winfo_screenheight()
