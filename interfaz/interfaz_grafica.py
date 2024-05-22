@@ -174,7 +174,7 @@ class VentanaSimulacion:
         self.entry_rango_max.pack(side=ctk.LEFT, padx=10, pady=10)
 
         self.aceptar_button = ctk.CTkButton(self.principal, text="Aceptar", command=self.seleccionar_magnitud)
-        self.aceptar_button.pack(side=ctk.RIGHT, padx=20, pady=100)
+        self.aceptar_button.pack(side=ctk.RIGHT, padx=10, pady=20)
         
         
 
@@ -232,5 +232,3 @@ class VentanaDiseno:
         self.button_discretizador.pack(side=ctk.TOP)
         self.button_emulador.pack(side=ctk.TOP)
         self.root.mainloop()
-
-
