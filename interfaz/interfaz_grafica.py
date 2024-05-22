@@ -78,6 +78,11 @@ class VentanaSimulacion():
         self.menu = ctk.CTkFrame(self.root, fg_color="#1F6AA5",width=220)
         self.menu.pack(side=ctk.LEFT, fill='both', expand=False)
 
+
+        #FRAME PRINCIPAL
+        self.principal =ctk.CTkScrollableFrame(self.root, fg_color="#242424")
+        self.principal.pack(side=ctk.RIGHT, fill='both',expand=True)
+
         self.label = ctk.CTkLabel(self.menu, text="\nP A N D O R A\n", font=("Arial Black", 20), padx=30)
 
         #label.place(relx=0.5, rely=0.1, anchor="center") 
@@ -94,7 +99,19 @@ class VentanaSimulacion():
         self.iemulador = ctk.CTkImage(light_image=Image.open(os.path.join(carpeta_imagenes, "imagen1.png")), dark_image=Image.open(os.path.join(carpeta_imagenes, "imagen1.png")), size=(90, 50))
         self.play = ctk.CTkImage(light_image=Image.open(os.path.join(carpeta_imagenes, "play.png")), dark_image=Image.open(os.path.join(carpeta_imagenes, "play.png")), size=(37, 30))
 
-        self.button_instrumento1 = ctk.CTkButton(self.menu, text="Instrumento", image=self.instrumento1, width=220)
+        #configuracion frame principal
+        def instrumento_config():
+            self.label_instrumento = ctk.CTkLabel(self.principal, text="INSTRUMENTO", font=("Arial Black", 20), padx=30)
+            self.label_instrumento.pack(side=ctk.TOP)
+            #self.label_magnitud_instru = ctk.CTkLabel(self.principal, text="Magnitud")
+            #self.label_magnitud_instru.place()
+            #self.label_xd = ctk.CTkLabel(self.principal, text="jaaa")
+            #self.label_xd.place(relx=0.02, rely=0.4)
+
+
+
+
+        self.button_instrumento1 = ctk.CTkButton(self.menu, text="Instrumento", image=self.instrumento1, width=220,command=instrumento_config)
         self.button_sensor = ctk.CTkButton(self.menu, text="Sensor", image=self.isensor, width=220)
         self.button_acondicionador = ctk.CTkButton(self.menu, text="Acondicionador", image=self.iacondicionador, width=220)
         self.button_discretizador = ctk.CTkButton(self.menu, text="Discretizador", image=self.idiscretizador, width=220)
@@ -109,6 +126,14 @@ class VentanaSimulacion():
         self.button_acondicionador.pack(side=ctk.TOP)
         self.button_discretizador.pack(side=ctk.TOP)
         self.button_emulador.pack(side=ctk.TOP)
+
+
+
+        
+
+
+
+
 
         
         self.root.mainloop()
