@@ -218,7 +218,7 @@ class VentanaSimulacion:
         self.combobox_unidads = ctk.CTkComboBox(self.principal, values=['unidad'])
         self.combobox_unidads.grid(row=2, column=3,padx=10)
         
-        self.label_ss = ctk.CTkLabel(self.principal, text="Sensibilidad sensor:", font=("Arial", 15), pady=30)
+        self.label_ss = ctk.CTkLabel(self.principal, text="Sensibilidad:", font=("Arial", 15), pady=30)
         self.label_ss.grid(row=3, column=0,pady=5)
 
         self.ss_var = ctk.StringVar(value="0")  
@@ -272,7 +272,7 @@ class VentanaSimulacion:
         self.combobox_unidada = ctk.CTkComboBox(self.principal, values=['unidad'])
         self.combobox_unidada.grid(row=2, column=3,padx=10)
         
-        self.label_sa = ctk.CTkLabel(self.principal, text="Sensibilidad Acondicionador:", font=("Arial", 15), pady=30)
+        self.label_sa = ctk.CTkLabel(self.principal, text="Sensibilidad:", font=("Arial", 15), pady=30)
         self.label_sa.grid(row=3, column=0,pady=5)
 
         self.sa_var = ctk.StringVar(value="0")  
@@ -288,6 +288,15 @@ class VentanaSimulacion:
         
         self.aceptar3_button = ctk.CTkButton(self.principal, text="Aceptar", command=self.guardar3_datos)
         self.aceptar3_button.grid(row=5, column=0, columnspan=3, pady=20)
+       
+       
+    def guardar4_datos(self):
+        sensibilidad_di = self.sd_var.get()
+        valor_iniciald = self.vid_var.get()
+        print(f"Sensibilidad: {sensibilidad_di}, Valor inicial: {valor_iniciald}")
+        
+    
+        
         
 
     def toggle_entries(self):
@@ -300,7 +309,7 @@ class VentanaSimulacion:
         self.label_instrumento = ctk.CTkLabel(self.principal, text="DISCRETIZADOR", font=("Arial Black", 20), padx=30)
         self.label_instrumento.grid(row=0, column=0, columnspan=5)
 
-        self.label_sd = ctk.CTkLabel(self.principal, text="Sensibilidad Discretizador:", font=("Arial", 15), pady=30)
+        self.label_sd = ctk.CTkLabel(self.principal, text="Sensibilidad:", font=("Arial", 15), pady=30)
         self.label_sd.grid(row=2, column=0,pady=5)
 
         self.sd_var = ctk.StringVar(value="0")  
@@ -314,17 +323,21 @@ class VentanaSimulacion:
         self.entry_vid = ctk.CTkEntry(self.principal, textvariable=self.vid_var, font=("Arial", 12))
         self.entry_vid.grid(row=4, column=2)
         
-        self.toggle_button = ctk.CTkButton(self.principal, text="Deshabilitar", command=self.toggle_entries)
+        self.toggle_button = ctk.CTkButton(self.principal, text="Habilitar/Deshabilitar", command=self.toggle_entries)
         self.toggle_button.grid(row=6, column=0, columnspan=3, pady=20)
         
+        self.aceptar3_button = ctk.CTkButton(self.principal, text="Aceptar", command=self.guardar4_datos)
+        self.aceptar3_button.grid(row=6, column=3, columnspan=3)
+        
 
+        
 #Configuracion Emodulador
     def emodulador_config(self):
         self.limpiarpanel()
         self.label_instrumento = ctk.CTkLabel(self.principal, text="EMODULADOR", font=("Arial Black", 20), padx=30)
         self.label_instrumento.grid(row=0, column=0, columnspan=5)
-
-
+       
+        
     def limpiarpanel(self):
         for widget in self.principal.winfo_children():
             widget.destroy()
