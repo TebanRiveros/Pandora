@@ -74,7 +74,7 @@ class VentanaSimulacion:
         self.menu.pack(side=ctk.LEFT, fill='both', expand=False)
 
         # FRAME PRINCIPAL
-        self.principal = ctk.CTkScrollableFrame(self.root, fg_color="#003B4A")
+        self.principal = ctk.CTkScrollableFrame(self.root, fg_color="#242424")
         self.principal.pack(side=ctk.RIGHT, fill='both', expand=True)
 
         self.label = ctk.CTkLabel(self.menu, text="\nP A N D O R A\n", font=("Arial Black", 20), padx=30)
@@ -100,10 +100,10 @@ class VentanaSimulacion:
 
         # Configuración frame principal
         self.button_instrumento1 = ctk.CTkButton(self.menu, text="Instrumento", image=self.instrumento1, width=220, command=self.instrumento_config)
-        self.button_sensor = ctk.CTkButton(self.menu, text="Sensor", image=self.isensor, width=220)
-        self.button_acondicionador = ctk.CTkButton(self.menu, text="Acondicionador", image=self.iacondicionador, width=220)
-        self.button_discretizador = ctk.CTkButton(self.menu, text="Discretizador", image=self.idiscretizador, width=220)
-        self.button_emulador = ctk.CTkButton(self.menu, text="Emulador", image=self.iemulador, width=220)
+        self.button_sensor = ctk.CTkButton(self.menu, text="Sensor", image=self.isensor, width=220, command=self.sensor_config)
+        self.button_acondicionador = ctk.CTkButton(self.menu, text="Acondicionador", image=self.iacondicionador, width=220, command=self.acondiconador_config)
+        self.button_discretizador = ctk.CTkButton(self.menu, text="Discretizador", image=self.idiscretizador, width=220, command=self.discretizador_config)
+        self.button_emulador = ctk.CTkButton(self.menu, text="Emulador", image=self.iemulador, width=220, command=self.emodulador_config)
 
         self.button_simular = ctk.CTkButton(self.menu, text="Simular", image=self.play, font=("Arial", 15), corner_radius=32, border_width=1.5)
         self.button_simular.place(relx=0.5, rely=0.8, anchor=tkinter.CENTER)
@@ -116,65 +116,85 @@ class VentanaSimulacion:
 
         self.root.mainloop()
 
-    def seleccionar_magnitud(self):
-        # Limpiar cualquier widget previamente creado
-        for widget in self.principal.winfo_children():
-            widget.destroy()
-
-        self.label_magnitud = ctk.CTkLabel(self.principal, text="Magnitud", font=("Arial", 15))
-        self.label_magnitud.pack(side=ctk.LEFT, padx=20, pady=10)
-
-        # Obtener la magnitud seleccionada
-        magnitud_seleccionada = self.magnitud_var.get()
-
-        # Verificar si la magnitud está en el diccionario
-        if magnitud_seleccionada in self.unidad_dict:
-            unidades = self.unidad_dict[magnitud_seleccionada]
-
-            # Crear ComboBox para las unidades
-            self.label_unidad = ctk.CTkLabel(self.principal, text="Unidad", font=("Arial", 15))
-            self.label_unidad.pack(side=ctk.LEFT, padx=20, pady=10)
-
-            self.unidad_var = ctk.StringVar(value=unidades[0])  # Seleccionar la primera unidad por defecto
-            self.combobox_unidades = ctk.CTkComboBox(self.principal, values=unidades, variable=self.unidad_var)
-            self.combobox_unidades.pack(side=ctk.LEFT, padx=20, pady=10)
-        else:
-            print("Magnitud no encontrada en el diccionario")
+    def seleccionar_magnitud(self,eleccion):
+        print('sikas')
+        lista_unidades = self.unidad_dict.get(eleccion, [])
+        # Ahora unidades_magnitud contendrá las unidades asociadas a la magnitud especificada
+        print(lista_unidades)
+        self.combobox_unidad.configure(values=lista_unidades)
    
-# Configuración frame principal
+# Configuración instrumento
     def instrumento_config(self):
+        self.limpiarpanel()
         self.label_instrumento = ctk.CTkLabel(self.principal, text="INSTRUMENTO", font=("Arial Black", 20), padx=30)
-        self.label_instrumento.pack(side=ctk.TOP, pady=10)
+        self.label_instrumento.grid(row=0, column=0, columnspan=5)
 
         self.label_magnitud = ctk.CTkLabel(self.principal, text="Magnitud", font=("Arial", 15))
-        self.label_magnitud.pack(side=ctk.LEFT, padx=20, pady=10)
+        self.label_magnitud.grid(row=1, column=0)
 
         # Combobox for selecting magnitudes
         self.magnitudes = ["Masa", "Presion", "Temperatura", "Iluminancia", "Longitud"]
         self.magnitud_var = ctk.StringVar(value=self.magnitudes[0])
-        self.combobox_magnitudes = ctk.CTkComboBox(self.principal, values=self.magnitudes, variable=self.magnitud_var)
-        self.combobox_magnitudes.pack(side=ctk.LEFT, padx=20, pady=10)
-        
-        
-        
-
+        self.combobox_magnitudes = ctk.CTkComboBox(self.principal, values=self.magnitudes, command=self.seleccionar_magnitud)
+        self.combobox_magnitudes.grid(row=1, column=1)
     # Sección para ingresar rango
         self.label_rango = ctk.CTkLabel(self.principal, text="Rango", font=("Arial", 15))
-        self.label_rango.pack(side=ctk.LEFT, padx=20, pady=10)
+        self.label_rango.grid(row=1, column=2)
 
         self.rango_min_var = ctk.StringVar(value="0")  
         self.entry_rango_min = ctk.CTkEntry(self.principal, textvariable=self.rango_min_var, font=("Arial", 12))
-        self.entry_rango_min.pack(side=ctk.LEFT, padx=10, pady=10)
+        self.entry_rango_min.grid(row=1, column=3)
 
         self.label_to = ctk.CTkLabel(self.principal, text="a", font=("Arial", 15))
-        self.label_to.pack(side=ctk.LEFT, padx=5, pady=10)
+        self.label_to.grid(row=1, column=4)
 
         self.rango_max_var = ctk.StringVar(value="100")  
         self.entry_rango_max = ctk.CTkEntry(self.principal, textvariable=self.rango_max_var, font=("Arial", 12))
-        self.entry_rango_max.pack(side=ctk.LEFT, padx=10, pady=10)
+        self.entry_rango_max.grid(row=1, column=5)
 
-        self.aceptar_button = ctk.CTkButton(self.principal, text="Aceptar", command=self.seleccionar_magnitud)
-        self.aceptar_button.pack(side=ctk.RIGHT, padx=10, pady=20)
+        self.label_unidad = ctk.CTkLabel(self.principal, text="Unidad", font=("Arial", 15))
+        self.label_unidad.grid(row=2, column=0)
+        self.combobox_unidad = ctk.CTkComboBox(self.principal, values=['unidad'])
+        self.combobox_unidad.grid(row=2, column=1)
+    
+
+
+#Configuracion sensor
+    def sensor_config(self):
+        self.limpiarpanel()
+        self.label_instrumento = ctk.CTkLabel(self.principal, text="SENSOR", font=("Arial Black", 20), padx=30)
+        self.label_instrumento.grid(row=0, column=0, columnspan=5)
+
+
+
+#Configuracion acondiconador
+    def acondiconador_config(self):
+        self.limpiarpanel()
+        self.label_instrumento = ctk.CTkLabel(self.principal, text="ACONDICIONADOR", font=("Arial Black", 20), padx=30)
+        self.label_instrumento.grid(row=0, column=0, columnspan=5)
+
+
+
+#Configuracion discretizador
+    def discretizador_config(self):
+        self.limpiarpanel()
+        self.label_instrumento = ctk.CTkLabel(self.principal, text="DISCRETIZADOR", font=("Arial Black", 20), padx=30)
+        self.label_instrumento.grid(row=0, column=0, columnspan=5)
+
+
+
+#Configuracion Emodulador
+    def emodulador_config(self):
+        self.limpiarpanel()
+        self.label_instrumento = ctk.CTkLabel(self.principal, text="EMODULADOR", font=("Arial Black", 20), padx=30)
+        self.label_instrumento.grid(row=0, column=0, columnspan=5)
+
+
+    def limpiarpanel(self):
+        for widget in self.principal.winfo_children():
+            widget.destroy()
+
+
         
         
 
