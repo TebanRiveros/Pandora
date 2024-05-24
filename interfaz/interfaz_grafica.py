@@ -2,6 +2,7 @@ import tkinter
 import os
 from PIL import Image, ImageTk
 import customtkinter as ctk
+from tkinter import messagebox
 
 carpeta_principal = os.path.dirname(__file__)
 carpeta_imagenes = os.path.join(carpeta_principal, "imagenes")
@@ -140,6 +141,8 @@ class VentanaSimulacion:
         # Ahora unidades_magnitud contendrá las unidades asociadas a la magnitud especificada
         print(lista_unidada)
         self.combobox_unidada.configure(values=lista_unidada)
+
+
     
    
 # Configuración instrumento
@@ -194,10 +197,10 @@ class VentanaSimulacion:
     def guardar_datos(self):
         magnitud_seleccionada = self.magsensor_var.get()
         unidad_seleccionada = self.combobox_unidads.get()
-        sensibilidad_sensor = self.ss_var.get()
+        self.sensibilidad_sensor = float(self.ss_var.get())
         valor_inicial = self.vis_var.get()
         
-        print(f"Magnitud: {magnitud_seleccionada}, Unidad: {unidad_seleccionada}, Sensibilidad: {sensibilidad_sensor}, Valor inicial: {valor_inicial}")
+        print(f"Magnitud: {magnitud_seleccionada}, Unidad: {unidad_seleccionada}, Sensibilidad: {self.sensibilidad_sensor}, Valor inicial: {valor_inicial}")
         
 
 
@@ -247,12 +250,13 @@ class VentanaSimulacion:
             self.combobox_unidada.configure(values=["A", "mA"])
 
     def guardar3_datos(self):
-        magnitud_seleccionadac = self.magac_var.get()
-        unidad_seleccionadac = self.combobox_unidada.get()
-        sensibilidad_ac = self.sa_var.get()
-        valor_iniciala = self.via_var.get()
+        self.magnitud_seleccionadac = self.magac_var.get()
+        self.unidad_seleccionadac = self.combobox_unidada.get()
+        self.sensibilidad_ac = float(self.sa_var.get())
+        self.valor_iniciala = self.via_var.get()
         
-        print(f"Magnitud: {magnitud_seleccionadac}, Unidad: {unidad_seleccionadac}, Sensibilidad: {sensibilidad_ac}, Valor inicial: {valor_iniciala}")
+        print(f"Magnitud: {self.magnitud_seleccionadac}, Unidad: {self.unidad_seleccionadac}, Sensibilidad: {self.sensibilidad_ac}, Valor inicial: {self.valor_iniciala}")
+        print(self.sensibilidad_sensor*self.sensibilidad_ac)
         
 
 #Configuracion acondiconador
@@ -299,10 +303,21 @@ class VentanaSimulacion:
         
         
 
-    def toggle_entries(self):
-        state = ctk.DISABLED if self.entry_sd.cget("state") == ctk.NORMAL else ctk.NORMAL
-        self.entry_sd.configure(state=state)
-        self.entry_via.configure(state=state)
+    # def toggle_entries(self):
+    #     state = ctk.DISABLED if self.entry_sd.cget("state") == ctk.NORMAL else ctk.NORMAL
+    #     self.entry_sd.configure(state=state)
+    #     self.entry_via.configure(state=state)
+    
+    def switch_event(self):
+        print("switch toggled, current value:", self.habilitador_var.get())
+        if (self.habilitador_var.get()=='off'):
+            messagebox.showinfo("Discretizador", "Al desabilitar el discretizador el instrumento sera analogico")
+            self.entry_sd.configure(state='disabled')
+            self.entry_vid.configure(state='disabled')
+        else:
+            self.entry_sd.configure(state='normal')
+            self.entry_vid.configure(state='normal')
+
 #Configuracion discretizador
     def discretizador_config(self):
         self.limpiarpanel()
@@ -323,8 +338,11 @@ class VentanaSimulacion:
         self.entry_vid = ctk.CTkEntry(self.principal, textvariable=self.vid_var, font=("Arial", 12))
         self.entry_vid.grid(row=4, column=2)
         
-        self.toggle_button = ctk.CTkButton(self.principal, text="Habilitar/Deshabilitar", command=self.toggle_entries)
-        self.toggle_button.grid(row=6, column=0, columnspan=3, pady=20)
+        self.habilitador_var = ctk.StringVar(value="on")
+        self.habilitador = ctk.CTkSwitch(self.principal, text="Desabilitar el discretizador", command=self.switch_event,variable=self.habilitador_var, onvalue="on", offvalue="off")
+        self.habilitador.grid(row=6,column=0)
+        #self.toggle_button = ctk.CTkButton(self.principal, text="Habilitar/Deshabilitar", command=self.toggle_entries)
+        #self.toggle_button.grid(row=6, column=0, columnspan=3, pady=20)
         
         self.aceptar3_button = ctk.CTkButton(self.principal, text="Aceptar", command=self.guardar4_datos)
         self.aceptar3_button.grid(row=6, column=3, columnspan=3)
