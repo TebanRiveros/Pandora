@@ -191,7 +191,7 @@ class VentanaSimulacion:
         self.combobox_unidad = ctk.CTkComboBox(self.principal, values=['unidad'])
         self.combobox_unidad.grid(row=6, column=5)
         
-        self.label_iteracion = ctk.CTkLabel(self.principal, text="Saltos:", font=("Arial", 15), pady=30)
+        self.label_iteracion = ctk.CTkLabel(self.principal, text="Puntos:", font=("Arial", 15), pady=30)
         self.label_iteracion.grid(row=17, column=0)
         
         self.iteracion_var = ctk.StringVar(value="0")  
@@ -364,7 +364,7 @@ class VentanaSimulacion:
 #Configuracion Emodulador
     def emodulador_config(self):
         self.limpiarpanel()
-        self.label_instrumento = ctk.CTkLabel(self.principal, text="EMODULADOR", font=("Arial Black", 20), padx=30)
+        self.label_instrumento = ctk.CTkLabel(self.principal, text="EMULADOR", font=("Arial Black", 20), padx=30)
         self.label_instrumento.grid(row=0, column=0, columnspan=5)
         
         self.se = 1 / (float(self.sd_var.get()) * float(self.sa_var.get()) * float(self.ss_var.get()))
