@@ -3,6 +3,10 @@ import os
 from PIL import Image, ImageTk
 import customtkinter as ctk
 from tkinter import messagebox
+import numpy as np
+import matplotlib.pyplot as plt
+
+
 
 carpeta_principal = os.path.dirname(__file__)
 carpeta_imagenes = os.path.join(carpeta_principal, "imagenes")
@@ -93,11 +97,11 @@ class VentanaSimulacion:
         self.play = ctk.CTkImage(light_image=Image.open(os.path.join(carpeta_imagenes, "play.png")),dark_image=Image.open(os.path.join(carpeta_imagenes, "play.png")), size=(37, 30))
 
         self.unidad_dict = {}
-        self.unidad_dict["Masa"] = ["gr", "Kgr"]
-        self.unidad_dict["Presion"] = ["Pa", "hPa", "kPa"]
-        self.unidad_dict["Temperatura"] = ["°C", "K", "°F"]
-        self.unidad_dict["Iluminancia"] = ["lx"]
-        self.unidad_dict["Longitud"] = ["m", "cm"]
+        self.unidad_dict["Masa"] = ["M/gr", "M/Kgr"]
+        self.unidad_dict["Presion"] = ["P/Pa", "P/hPa", "P/kPa"]
+        self.unidad_dict["Temperatura"] = ["T/°C", "T/K", "T/°F"]
+        self.unidad_dict["Iluminancia"] = ["Ev/lx"]
+        self.unidad_dict["Longitud"] = ["L/m", "L/cm"]
         
         self.unidad_2 = {}
         self.unidad_2["Voltaje"] = ["mV","v"]
@@ -111,7 +115,7 @@ class VentanaSimulacion:
         self.button_discretizador = ctk.CTkButton(self.menu, text="Discretizador", image=self.idiscretizador, width=220, command=self.discretizador_config)
         self.button_emulador = ctk.CTkButton(self.menu, text="Emulador", image=self.iemulador, width=220, command=self.emodulador_config)
 
-        self.button_simular = ctk.CTkButton(self.menu, text="Simular", image=self.play, font=("Arial", 15), corner_radius=32, border_width=1.5)
+        self.button_simular = ctk.CTkButton(self.menu, text="Simular", image=self.play, font=("Arial", 15), corner_radius=32, border_width=1.5,command=self.simular_config)
         self.button_simular.place(relx=0.5, rely=0.8, anchor=tkinter.CENTER)
 
         self.button_instrumento1.pack(side=ctk.TOP)
@@ -143,7 +147,17 @@ class VentanaSimulacion:
         self.combobox_unidada.configure(values=lista_unidada)
 
 
-    
+
+    def guardari_datos(self):
+        magnitud = self.magnitud_var.get()
+        self.unidad = self.combobox_unidad.get()
+        rangoma = self.rango_max_var.get()
+        rangomi = self.rango_min_var.get()
+        salto = self.iteracion_var.get()
+        
+        print(f"Magnitud: {magnitud}, Unidad: {self.unidad}, Maximo: {rangoma}, Minimo: {rangomi}, Saltos: {salto}")
+        
+
    
 # Configuración instrumento
     def instrumento_config(self):
@@ -183,6 +197,9 @@ class VentanaSimulacion:
         self.iteracion_var = ctk.StringVar(value="0")  
         self.entry_iteracion = ctk.CTkEntry(self.principal, textvariable=self.iteracion_var, font=("Arial", 12))
         self.entry_iteracion.grid(row=17, column=3)
+        
+        self.aceptar_button = ctk.CTkButton(self.principal, text="Aceptar", command=self.guardari_datos)
+        self.aceptar_button.grid(row=18, column=3, columnspan=3, pady=20)
     
 
 
@@ -197,7 +214,7 @@ class VentanaSimulacion:
     def guardar_datos(self):
         magnitud_seleccionada = self.magsensor_var.get()
         unidad_seleccionada = self.combobox_unidads.get()
-        self.sensibilidad_sensor = float(self.ss_var.get())
+        self.sensibilidad_sensor = self.ss_var.get()
         valor_inicial = self.vis_var.get()
         
         print(f"Magnitud: {magnitud_seleccionada}, Unidad: {unidad_seleccionada}, Sensibilidad: {self.sensibilidad_sensor}, Valor inicial: {valor_inicial}")
@@ -247,7 +264,7 @@ class VentanaSimulacion:
         if choice == "Voltaje":
             self.combobox_unidada.configure(values=["V", "mV"])
         elif choice == "Corriente":
-            self.combobox_unidada.configure(values=["A", "mA"])
+            self.combobox_unidada.configure(values=["A", "mA","uA"])
 
     def guardar3_datos(self):
         self.magnitud_seleccionadac = self.magac_var.get()
@@ -256,7 +273,7 @@ class VentanaSimulacion:
         self.valor_iniciala = self.via_var.get()
         
         print(f"Magnitud: {self.magnitud_seleccionadac}, Unidad: {self.unidad_seleccionadac}, Sensibilidad: {self.sensibilidad_ac}, Valor inicial: {self.valor_iniciala}")
-        print(self.sensibilidad_sensor*self.sensibilidad_ac)
+        
         
 
 #Configuracion acondiconador
@@ -295,18 +312,11 @@ class VentanaSimulacion:
        
        
     def guardar4_datos(self):
-        sensibilidad_di = self.sd_var.get()
-        valor_iniciald = self.vid_var.get()
-        print(f"Sensibilidad: {sensibilidad_di}, Valor inicial: {valor_iniciald}")
-        
-    
+        self.sensibilidad_di = self.sd_var.get()
+        self.valor_iniciald = self.vid_var.get()
+        print(f"Sensibilidad: {self.sensibilidad_di}, Valor inicial: {self.valor_iniciald}")
         
         
-
-    # def toggle_entries(self):
-    #     state = ctk.DISABLED if self.entry_sd.cget("state") == ctk.NORMAL else ctk.NORMAL
-    #     self.entry_sd.configure(state=state)
-    #     self.entry_via.configure(state=state)
     
     def switch_event(self):
         print("switch toggled, current value:", self.habilitador_var.get())
@@ -347,13 +357,126 @@ class VentanaSimulacion:
         self.aceptar3_button = ctk.CTkButton(self.principal, text="Aceptar", command=self.guardar4_datos)
         self.aceptar3_button.grid(row=6, column=3, columnspan=3)
         
-
+   
+        
+        
         
 #Configuracion Emodulador
     def emodulador_config(self):
         self.limpiarpanel()
         self.label_instrumento = ctk.CTkLabel(self.principal, text="EMODULADOR", font=("Arial Black", 20), padx=30)
         self.label_instrumento.grid(row=0, column=0, columnspan=5)
+        
+        self.se = 1 / (float(self.sd_var.get()) * float(self.sa_var.get()) * float(self.ss_var.get()))
+        self.vie = (-float(self.sd_var.get()) * float(self.sa_var.get()) * float(self.vis_var.get()) - float(self.sd_var.get()) * float(self.via_var.get()) - float(self.vid_var.get())) / (float(self.sd_var.get()) * float(self.sa_var.get()) * float(self.ss_var.get()))
+        self.fuc = 1 / (float(self.se))
+        self.vaf = -((float(self.fuc)) * (float(self.vie)))
+        print(f"Emulador: {self.vie}")
+        print(f"Emulador: {self.se}")
+        
+        self.se_var = ctk.StringVar()
+        self.se_var.set(str(self.se))
+        self.vie_var = ctk.StringVar()
+        self.vie_var.set(str(self.vie))
+        self.unidad_var = ctk.StringVar()
+        self.unidad_var.set(str(self.unidad))
+        self.fuc_var = ctk.StringVar()
+        self.fuc_var.set(str(self.fuc))
+        self.vaf_var = ctk.StringVar()
+        self.vaf_var.set(str(self.vaf))
+        
+        self.label_se1 = ctk.CTkLabel(self.principal, text="Sensibilidad:", font=("Arial", 15), pady=15)
+        self.label_se1.grid(row=2, column=0)
+        self.label_se = ctk.CTkLabel(self.principal, textvariable=self.se_var, font=("Arial", 15), padx=30)
+        self.label_se.grid(row=2, column=1, columnspan=5)
+        
+        self.label_vie1 = ctk.CTkLabel(self.principal, text="Valor inicial:", font=("Arial", 15), pady=15)
+        self.label_vie1.grid(row=3, column=0)
+        self.label_vie = ctk.CTkLabel(self.principal, textvariable=self.vie_var, font=("Arial", 15), padx=30)
+        self.label_vie.grid(row=3, column=1, columnspan=5)
+        
+        self.label_fe = ctk.CTkLabel(self.principal, text="Función Compuesta del Emulador", font=("Arial", 20),pady=25)
+        self.label_fe.grid(row=4, column=4,columnspan=5)
+        self.label_fc = ctk.CTkLabel(self.principal, textvariable=self.unidad_var, font=("Arial", 15), pady=15)
+        self.label_fc.grid(row=5, column=3, padx=10, pady=20)
+        self.label_fc1 = ctk.CTkLabel(self.principal, text="=", font=("Arial", 15), pady=15)
+        self.label_fc1.grid(row=5, column=4)
+        self.label_fc2 = ctk.CTkLabel(self.principal, textvariable=self.se_var, font=("Arial", 15))
+        self.label_fc2.grid(row=5, column=5)
+        self.label_fc3a = ctk.CTkLabel(self.principal, text="bDAS", font=("Arial", 15))
+        self.label_fc3a.grid(row=5, column=6)
+        
+        if self.vie > 0:
+            self.label_fc3 = ctk.CTkLabel(self.principal, text="+", font=("Arial", 15))
+            self.label_fc3.grid(row=5, column=7,columnspan=2)
+        self.label_fc4 = ctk.CTkLabel(self.principal, textvariable=self.vie_var, font=("Arial", 15))
+        self.label_fc4.grid(row=5, column=8)
+        
+        self.label_fc5 = ctk.CTkLabel(self.principal, text="Función Compuesta del Instrumento", font=("Arial", 20),pady=25)
+        self.label_fc5.grid(row=6, column=4,columnspan=5)
+        
+        
+        self.label_f = ctk.CTkLabel(self.principal, text="bDAS/CTAS", font=("Arial", 15), pady=15)
+        self.label_f.grid(row=7, column=3, padx=10, pady=20)
+        self.label_f1 = ctk.CTkLabel(self.principal, text="=", font=("Arial", 15), pady=15)
+        self.label_f1.grid(row=7, column=4)
+        self.label_f2 = ctk.CTkLabel(self.principal, textvariable=self.fuc_var, font=("Arial", 15))
+        self.label_f2.grid(row=7, column=5)
+        self.label_f3a = ctk.CTkLabel(self.principal, textvariable=self.unidad_var, font=("Arial", 15))
+        self.label_f3a.grid(row=7, column=6)
+        
+        if self.vaf > 0:
+            self.label_f3 = ctk.CTkLabel(self.principal, text="+", font=("Arial", 15))
+            self.label_f3.grid(row=7, column=7)
+        self.label_f4 = ctk.CTkLabel(self.principal, textvariable=self.vaf_var, font=("Arial", 15))
+        self.label_f4.grid(row=7, column=8)
+        
+        
+        #Configuracion Simulador
+
+    def simular_config(self):
+        self.limpiarpanel()
+        self.label_instrumento = ctk.CTkLabel(self.principal, text="Simulación", font=("Arial Black", 20), padx=30)
+        self.label_instrumento.grid(row=0, column=0, columnspan=5)
+        
+        # Obtener los valores mínimo y máximo del rango
+        ri = float(self.rango_min_var.get())
+        rf = float(self.rango_max_var.get())
+        salto = int(self.iteracion_var.get())
+        # Generación de prueba
+        mesurando = np.linspace(ri, rf, num=salto)
+        sensor = (mesurando * float(self.ss_var.get())) + float(self.vis_var.get())
+        
+        plt.figure()
+        plt.plot(mesurando, sensor, marker='o', linestyle='-')
+        plt.title('Gráfica Sensor vs Mesurando')
+        plt.xlabel('Mesurando')
+        plt.ylabel('Sensor')
+        plt.grid(True)
+        plt.show()
+
+        acondicionador = (sensor * float(self.sa_var.get())) + float(self.via_var.get())
+        plt.figure()
+        plt.plot(sensor, acondicionador, marker='o', linestyle='-')
+        plt.title('Gráfica Acondicionador vs Sensor')
+        plt.xlabel('Sensor')
+        plt.ylabel('Acondicionador')
+        plt.grid(True)
+        plt.show()
+        
+        discretizador = (acondicionador * float(self.sd_var.get())) + float(self.vid_var.get())
+        
+        # Convertir los valores de discretizador a enteros
+        discretizador_int = discretizador.astype(int)
+        
+        plt.figure()
+        plt.plot(mesurando, discretizador_int, marker='o', linestyle='')
+        plt.title('Gráfica Discretizador vs Mesurando')
+        plt.xlabel('Mesurando')
+        plt.ylabel('Discretizador')
+        plt.grid(True)
+        plt.show()
+
        
         
     def limpiarpanel(self):
