@@ -5,6 +5,8 @@ import customtkinter as ctk
 from tkinter import messagebox
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from matplotlib.figure import Figure
 
 
 
@@ -77,6 +79,7 @@ class VentanaSimulacion:
 
         self.menu = ctk.CTkFrame(self.root, fg_color="#1F6AA5", width=220)
         self.menu.pack(side=ctk.LEFT, fill='both', expand=False)
+        self.simulando=False
 
         # FRAME PRINCIPAL
         self.principal = ctk.CTkScrollableFrame(self.root, fg_color="#242424")
@@ -104,8 +107,8 @@ class VentanaSimulacion:
         self.unidad_dict["Longitud"] = ["L/m", "L/cm"]
         
         self.unidad_2 = {}
-        self.unidad_2["Voltaje"] = ["mV","v"]
-        self.unidad_2["Corriente"] = ["uA", "mA", "A"]
+        self.unidad_2["Voltaje"] = ["V/v","V/mv","V/uv"]
+        self.unidad_2["Corriente"] = ["I/uA", "I/mA", "I/A"]
        
 
         # Configuración frame principal
@@ -123,6 +126,10 @@ class VentanaSimulacion:
         self.button_acondicionador.pack(side=ctk.TOP)
         self.button_discretizador.pack(side=ctk.TOP)
         self.button_emulador.pack(side=ctk.TOP)
+
+        # Configurar las columnas de la cuadrícula para que se expandan
+        for i in range(5):
+            self.principal.grid_columnconfigure(i, weight=1)
 
         self.root.mainloop()
 
@@ -149,13 +156,13 @@ class VentanaSimulacion:
 
 
     def guardari_datos(self):
-        magnitud = self.magnitud_var.get()
+        self.magnitud = self.magnitud_var.get()
         self.unidad = self.combobox_unidad.get()
-        rangoma = self.rango_max_var.get()
-        rangomi = self.rango_min_var.get()
-        salto = self.iteracion_var.get()
+        self.rangoma = self.rango_max_var.get()
+        self.rangomi = self.rango_min_var.get()
+        self.salto = self.iteracion_var.get()
         
-        print(f"Magnitud: {magnitud}, Unidad: {self.unidad}, Maximo: {rangoma}, Minimo: {rangomi}, Saltos: {salto}")
+        #print(f"Magnitud: {magnitud}, Unidad: {self.unidad}, Maximo: {rangoma}, Minimo: {rangomi}, Saltos: {salto}")
         
 
    
@@ -200,6 +207,10 @@ class VentanaSimulacion:
         
         self.aceptar_button = ctk.CTkButton(self.principal, text="Aceptar", command=self.guardari_datos)
         self.aceptar_button.grid(row=18, column=3, columnspan=3, pady=20)
+
+        if(self.simulando==True):
+            self.sera = ctk.CTkLabel(self.principal, text="Puntos:", font=("Arial", 15), pady=30)
+            self.sera.grid(row=19, column=0)
     
 
 
@@ -212,12 +223,12 @@ class VentanaSimulacion:
             self.combobox_unidads.configure(values=["A", "mA"])
 
     def guardar_datos(self):
-        magnitud_seleccionada = self.magsensor_var.get()
-        unidad_seleccionada = self.combobox_unidads.get()
+        self.magnitud_seleccionada = self.magsensor_var.get()
+        self.unidad_seleccionada = self.combobox_unidads.get()
         self.sensibilidad_sensor = self.ss_var.get()
-        valor_inicial = self.vis_var.get()
+        self.valor_inicial = self.vis_var.get()
         
-        print(f"Magnitud: {magnitud_seleccionada}, Unidad: {unidad_seleccionada}, Sensibilidad: {self.sensibilidad_sensor}, Valor inicial: {valor_inicial}")
+        #print(f"Magnitud: {magnitud_seleccionada}, Unidad: {unidad_seleccionada}, Sensibilidad: {self.sensibilidad_sensor}, Valor inicial: {valor_inicial}")
         
 
 
@@ -257,6 +268,57 @@ class VentanaSimulacion:
 
 
 
+        if(self.simulando==True):
+            self.label_ecuacion_sensor = ctk.CTkLabel(self.principal, text=self.ecu_sensor, font=("Arial", 15), pady=30)
+            self.label_ecuacion_sensor.grid(row=6, column=0, columnspan=5)
+
+            # Configurar las columnas de la cuadrícula para que se expandan
+            # for i in range(5):
+            #     self.principal.grid_columnconfigure(i, weight=1)
+
+
+
+            # Crear una figura de Matplotlib
+            fig_sensor = Figure(figsize=(5, 4), dpi=100)
+            plt_sensor = fig_sensor.add_subplot(111)
+
+            # # Obtener los valores mínimo y máximo del rango
+            # ri = float(self.rangomi)
+            # rf = float(self.rangoma)
+            # salto = int(self.salto)
+            # sensibilidadgono = float(self.sensibilidad_sensor)
+            # inicialgono = float(self.valor_inicial)
+            # # # Generación de prueba
+            # mesurando = np.linspace(ri, rf, num=salto)
+            # sensor = (mesurando * sensibilidadgono) + inicialgono
+            
+            plt_sensor.plot(self.mesurando, self.sensor, marker='o', linestyle='-')
+            print(self.ri)
+            print(self.rf)
+            print(self.sensibilidadgono)
+            print(self.inicialgono)
+            # plt_sensor.title('Gráfica Sensor vs Mesurando')
+            # plt_sensor.xlabel('Mesurando')
+            # plt_sensor.ylabel('Sensor')
+            # plt_sensor.grid(True)
+            # plt_sensor.show()
+
+
+            # Crear un canvas para la figura de Matplotlib y agregarlo a la ventana de customtkinter
+            canvas = FigureCanvasTkAgg(fig_sensor, master=self.principal)
+            canvas.draw()
+            canvas.get_tk_widget().grid(row=7, column=0, columnspan=5, padx=10, sticky="nsew")
+
+            # Crear la barra de herramientas de navegación de Matplotlib y agregarla a la ventana de customtkinter
+            toolbar_frame = ctk.CTkFrame(self.principal)
+            toolbar_frame.grid(row=8, column=0, columnspan=5, padx=10, sticky="ew")
+            toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
+            toolbar.update()
+
+            
+
+
+
 
     def seleccionar_maga(self, choice):
         print(f"Magnitud seleccionada: {choice}")
@@ -269,7 +331,7 @@ class VentanaSimulacion:
     def guardar3_datos(self):
         self.magnitud_seleccionadac = self.magac_var.get()
         self.unidad_seleccionadac = self.combobox_unidada.get()
-        self.sensibilidad_ac = float(self.sa_var.get())
+        self.sensibilidad_ac = self.sa_var.get()
         self.valor_iniciala = self.via_var.get()
         
         print(f"Magnitud: {self.magnitud_seleccionadac}, Unidad: {self.unidad_seleccionadac}, Sensibilidad: {self.sensibilidad_ac}, Valor inicial: {self.valor_iniciala}")
@@ -309,6 +371,55 @@ class VentanaSimulacion:
         
         self.aceptar3_button = ctk.CTkButton(self.principal, text="Aceptar", command=self.guardar3_datos)
         self.aceptar3_button.grid(row=5, column=0, columnspan=3, pady=20)
+
+
+
+        if(self.simulando==True):
+            self.label_ecuacion_acondiconador = ctk.CTkLabel(self.principal, text=self.ecu_acondicionador, font=("Arial", 15), pady=30)
+            self.label_ecuacion_acondiconador.grid(row=6, column=0, columnspan=5)
+
+            # Configurar las columnas de la cuadrícula para que se expandan
+            # for i in range(5):
+            #     self.principal.grid_columnconfigure(i, weight=1)
+
+
+
+            # Crear una figura de Matplotlib
+            fig_acondicionador = Figure(figsize=(5, 4), dpi=100)
+            plt_acondicionador = fig_acondicionador.add_subplot(111)
+
+            # # Obtener los valores mínimo y máximo del rango
+            # ri = float(self.rangomi)
+            # rf = float(self.rangoma)
+            # salto = int(self.salto)
+            # sensibilidadgono = float(self.sensibilidad_sensor)
+            # inicialgono = float(self.valor_inicial)
+            # # # Generación de prueba
+            # mesurando = np.linspace(ri, rf, num=salto)
+            # sensor = (mesurando * sensibilidadgono) + inicialgono
+            # acondicionador = (sensor * float(self.sa_var.get())) + float(self.via_var.get())
+            plt_acondicionador.plot(self.sensor, self.acondicionador, marker='o', linestyle='-')
+            # print(ri)
+            # print(rf)
+            # print(sensibilidadgono)
+            # print(inicialgono)
+            # plt_sensor.title('Gráfica Sensor vs Mesurando')
+            # plt_sensor.xlabel('Mesurando')
+            # plt_sensor.ylabel('Sensor')
+            # plt_sensor.grid(True)
+            # plt_sensor.show()
+
+
+            # Crear un canvas para la figura de Matplotlib y agregarlo a la ventana de customtkinter
+            canvas = FigureCanvasTkAgg(fig_acondicionador, master=self.principal)
+            canvas.draw()
+            canvas.get_tk_widget().grid(row=7, column=0, columnspan=5, padx=10, sticky="nsew")
+
+            # Crear la barra de herramientas de navegación de Matplotlib y agregarla a la ventana de customtkinter
+            toolbar_frame = ctk.CTkFrame(self.principal)
+            toolbar_frame.grid(row=8, column=0, columnspan=5, padx=10, sticky="ew")
+            toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
+            toolbar.update()
        
        
     def guardar4_datos(self):
@@ -356,6 +467,37 @@ class VentanaSimulacion:
         
         self.aceptar3_button = ctk.CTkButton(self.principal, text="Aceptar", command=self.guardar4_datos)
         self.aceptar3_button.grid(row=6, column=3, columnspan=3)
+
+
+        if(self.simulando==True):
+            self.label_ecuacion_discretizador = ctk.CTkLabel(self.principal, text=self.ecu_discretizador, font=("Arial", 15), pady=30)
+            self.label_ecuacion_discretizador.grid(row=7, column=0, columnspan=5)
+
+            # Configurar las columnas de la cuadrícula para que se expandan
+            # for i in range(5):
+            #     self.principal.grid_columnconfigure(i, weight=1)
+
+
+
+            # Crear una figura de Matplotlib
+            fig_discretizador = Figure(figsize=(5, 4), dpi=100)
+            plt_discretizador = fig_discretizador.add_subplot(111)
+
+
+            plt_discretizador.plot(self.acondicionador, self.discretizador_int, marker='o', linestyle='')
+
+
+
+            # # Crear un canvas para la figura de Matplotlib y agregarlo a la ventana de customtkinter
+            canvas = FigureCanvasTkAgg(fig_discretizador, master=self.principal)
+            canvas.draw()
+            canvas.get_tk_widget().grid(row=8, column=0, columnspan=5, padx=10, sticky="nsew")
+
+            # # Crear la barra de herramientas de navegación de Matplotlib y agregarla a la ventana de customtkinter
+            toolbar_frame = ctk.CTkFrame(self.principal)
+            toolbar_frame.grid(row=9, column=0, columnspan=5, padx=10, sticky="ew")
+            toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
+            toolbar.update()
         
    
         
@@ -435,47 +577,82 @@ class VentanaSimulacion:
         #Configuracion Simulador
 
     def simular_config(self):
-        self.limpiarpanel()
-        self.label_instrumento = ctk.CTkLabel(self.principal, text="Simulación", font=("Arial Black", 20), padx=30)
-        self.label_instrumento.grid(row=0, column=0, columnspan=5)
+        self.simulando=True
+        #sensor
+        self.ecu_sensor = self.sensibilidad_sensor+' * '+self.unidad+' + '+self.valor_inicial
+        self.ecu_acondicionador = self.sensibilidad_ac+' * '+self.unidad_seleccionada+' + '+self.valor_iniciala
+        self.ecu_discretizador = self.sensibilidad_di+' * mv + 0.5'
+        # self.limpiarpanel()
+        # self.label_instrumento = ctk.CTkLabel(self.principal, text="Simulación", font=("Arial Black", 20), padx=30)
+        # self.label_instrumento.grid(row=0, column=0, columnspan=5)
         
         # Obtener los valores mínimo y máximo del rango
-        ri = float(self.rango_min_var.get())
-        rf = float(self.rango_max_var.get())
-        salto = int(self.iteracion_var.get())
-        # Generación de prueba
-        mesurando = np.linspace(ri, rf, num=salto)
-        sensor = (mesurando * float(self.ss_var.get())) + float(self.vis_var.get())
+        # ri = float(self.rango_min_var.get())
+        # rf = float(self.rango_max_var.get())
+        # salto = int(self.iteracion_var.get())
+        # # Generación de prueba
+        # mesurando = np.linspace(ri, rf, num=salto)
+        # sensor = (mesurando * float(self.ss_var.get())) + float(self.vis_var.get())
         
-        plt.figure()
-        plt.plot(mesurando, sensor, marker='o', linestyle='-')
-        plt.title('Gráfica Sensor vs Mesurando')
-        plt.xlabel('Mesurando')
-        plt.ylabel('Sensor')
-        plt.grid(True)
-        plt.show()
+        # plt.figure()
+        # plt.plot(mesurando, sensor, marker='o', linestyle='-')
+        # # plt.title('Gráfica Sensor vs Mesurando')
+        # # plt.xlabel('Mesurando')
+        # # plt.ylabel('Sensor')
+        # # plt.grid(True)
+        # plt.show()
 
-        acondicionador = (sensor * float(self.sa_var.get())) + float(self.via_var.get())
-        plt.figure()
-        plt.plot(sensor, acondicionador, marker='o', linestyle='-')
-        plt.title('Gráfica Acondicionador vs Sensor')
-        plt.xlabel('Sensor')
-        plt.ylabel('Acondicionador')
-        plt.grid(True)
-        plt.show()
+
+
+        # # Crear una figura de Matplotlib mirararara
+        #self.fig_sensor = Figure(figsize=(5, 4), dpi=100)
+        #self.plt_sensor = fig_sensor.add_subplot(111)
+
+        # # # Obtener los valores mínimo y máximo del rango
+        self.ri = float(self.rangomi)
+        self.rf = float(self.rangoma)
+        self.salto = int(self.salto)
+        self.sensibilidadgono = float(self.sensibilidad_sensor)
+        self.inicialgono = float(self.valor_inicial)
+        # # # Generación de prueba
+        self.mesurando = np.linspace(self.ri, self.rf, num=self.salto)
+        self.sensor = (self.mesurando * self.sensibilidadgono) + self.inicialgono
+               
+        # plt_sensor.plot(mesurando, sensor, marker='o', linestyle='-')
+        # print(ri)
+        # print(rf)
+        # print(sensibilidadgono)
+        # print(inicialgono)
+
+
+
+        self.sensibilidad_acgono = float(self.sensibilidad_ac)
+        self.valor_inicial_acgono = float(self.valor_iniciala)
+        print(self.sensibilidad_acgono)
+        print(self.valor_inicial_acgono)
+        self.acondicionador = (self.sensor * self.sensibilidad_acgono) + self.valor_inicial_acgono
+        # plt.figure()
+        # plt.plot(sensor, acondicionador, marker='o', linestyle='-')
+        # plt.title('Gráfica Acondicionador vs Sensor')
+        # plt.xlabel('Sensor')
+        # plt.ylabel('Acondicionador')
+        # plt.grid(True)
+        # plt.show()
+
+        self.sensibilidad_digono = float(self.sensibilidad_di)
         
-        discretizador = (acondicionador * float(self.sd_var.get())) + float(self.vid_var.get())
+        self.discretizador = (self.acondicionador * self.sensibilidad_digono) + 0.5
         
-        # Convertir los valores de discretizador a enteros
-        discretizador_int = discretizador.astype(int)
+        # # Convertir los valores de discretizador a enteros
+        self.discretizador_int = self.discretizador.astype(int)
         
-        plt.figure()
-        plt.plot(mesurando, discretizador_int, marker='o', linestyle='')
-        plt.title('Gráfica Discretizador vs Mesurando')
-        plt.xlabel('Mesurando')
-        plt.ylabel('Discretizador')
-        plt.grid(True)
-        plt.show()
+        # plt.figure()
+        # plt.plot(mesurando, discretizador_int, marker='o', linestyle='')
+        # plt.title('Gráfica Discretizador vs Mesurando')
+        # plt.xlabel('Mesurando')
+        # plt.ylabel('Discretizador')
+        # plt.grid(True)
+        # plt.show()
 
        
         
