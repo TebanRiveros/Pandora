@@ -217,7 +217,7 @@ class VentanaSimulacion:
             # Crear una figura de Matplotlib
             fig_instrumento = Figure(figsize=(5, 4), dpi=100)
             plt_instrumento = fig_instrumento.add_subplot(111)
-
+            plt_instrumento.grid(True)
 
             plt_instrumento.plot(self.mesurando, self.emulador, marker='o', linestyle='')
 
@@ -303,7 +303,7 @@ class VentanaSimulacion:
             # Crear una figura de Matplotlib
             fig_sensor = Figure(figsize=(5, 4), dpi=100)
             plt_sensor = fig_sensor.add_subplot(111)
-
+            plt_sensor.grid(True)
             # # Obtener los valores mínimo y máximo del rango
             # ri = float(self.rangomi)
             # rf = float(self.rangoma)
@@ -409,7 +409,7 @@ class VentanaSimulacion:
             # Crear una figura de Matplotlib
             fig_acondicionador = Figure(figsize=(5, 4), dpi=100)
             plt_acondicionador = fig_acondicionador.add_subplot(111)
-
+            plt_acondicionador.grid(True)
             # # Obtener los valores mínimo y máximo del rango
             # ri = float(self.rangomi)
             # rf = float(self.rangoma)
@@ -508,7 +508,7 @@ class VentanaSimulacion:
             # Crear una figura de Matplotlib
             fig_discretizador = Figure(figsize=(5, 4), dpi=100)
             plt_discretizador = fig_discretizador.add_subplot(111)
-
+            plt_discretizador.grid(True)
 
             plt_discretizador.plot(self.acondicionador, self.discretizador_int, marker='o', linestyle='')
 
@@ -549,7 +549,7 @@ class VentanaSimulacion:
             # Crear una figura de Matplotlib
             fig_emulador = Figure(figsize=(5, 4), dpi=100)
             plt_emulador = fig_emulador.add_subplot(111)
-
+            plt_emulador.grid(True)
             if self.bandera_discretizador == True:
                 plt_emulador.plot(self.discretizador_int, self.emulador, marker='o', linestyle='')
             else:
@@ -618,11 +618,7 @@ class VentanaSimulacion:
         self.mesurando = np.linspace(self.ri, self.rf, num=self.salto)
         self.sensor = (self.mesurando * self.sensibilidadgono) + self.inicialgono
                
-        # plt_sensor.plot(mesurando, sensor, marker='o', linestyle='-')
-        # print(ri)
-        # print(rf)
-        # print(sensibilidadgono)
-        # print(inicialgono)
+      
 
 
 
@@ -631,16 +627,10 @@ class VentanaSimulacion:
         print(self.sensibilidad_acgono)
         print(self.valor_inicial_acgono)
         self.acondicionador = (self.sensor * self.sensibilidad_acgono) + self.valor_inicial_acgono
-        # plt.figure()
-        # plt.plot(sensor, acondicionador, marker='o', linestyle='-')
-        # plt.title('Gráfica Acondicionador vs Sensor')
-        # plt.xlabel('Sensor')
-        # plt.ylabel('Acondicionador')
-        # plt.grid(True)
-        # plt.show()
+     
 
         if self.bandera_discretizador==True:
-            self.ecu_discretizador = self.sensibilidad_di+' * mv + 0.5'
+            self.ecu_discretizador = self.sensibilidad_di+' * Va + 0.5'
             self.sensibilidad_digono = float(self.sensibilidad_di)
         
             self.discretizador = (self.acondicionador * self.sensibilidad_digono) + 0.5
@@ -664,19 +654,6 @@ class VentanaSimulacion:
             print(self.valor_inicial_em)
             self.ecu_emulador=str(self.sensibilidad_emulador)+' * (volataje) + '+str(self.valor_inicial_em)
             self.emulador=(self.acondicionador*self.sensibilidad_emulador)+self.valor_inicial_em
-
-
-
-        
-        # plt.figure()
-        # plt.plot(mesurando, discretizador_int, marker='o', linestyle='')
-        # plt.title('Gráfica Discretizador vs Mesurando')
-        # plt.xlabel('Mesurando')
-        # plt.ylabel('Discretizador')
-        # plt.grid(True)
-        # plt.show()
-
-
 
 
 
