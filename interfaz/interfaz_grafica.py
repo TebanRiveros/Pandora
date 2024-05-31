@@ -109,6 +109,8 @@ class VentanaSimulacion:
         self.unidad_2 = {}
         self.unidad_2["Voltaje"] = ["V/v","V/mv","V/uv"]
         self.unidad_2["Corriente"] = ["I/uA", "I/mA", "I/A"]
+
+        self.bandera_discretizador=True
        
 
         # Configuración frame principal
@@ -209,8 +211,28 @@ class VentanaSimulacion:
         self.aceptar_button.grid(row=18, column=3, columnspan=3, pady=20)
 
         if(self.simulando==True):
-            self.sera = ctk.CTkLabel(self.principal, text="Puntos:", font=("Arial", 15), pady=30)
-            self.sera.grid(row=19, column=0)
+            #self.sera = ctk.CTkLabel(self.principal, text="Puntos:", font=("Arial", 15), pady=30)
+            #self.sera.grid(row=19, column=0)
+
+            # Crear una figura de Matplotlib
+            fig_instrumento = Figure(figsize=(5, 4), dpi=100)
+            plt_instrumento = fig_instrumento.add_subplot(111)
+
+
+            plt_instrumento.plot(self.mesurando, self.emulador, marker='o', linestyle='')
+
+
+
+            # # Crear un canvas para la figura de Matplotlib y agregarlo a la ventana de customtkinter
+            canvas = FigureCanvasTkAgg(fig_instrumento, master=self.principal)
+            canvas.draw()
+            canvas.get_tk_widget().grid(row=19, column=0, columnspan=5, padx=10, sticky="nsew")
+
+            # # Crear la barra de herramientas de navegación de Matplotlib y agregarla a la ventana de customtkinter
+            toolbar_frame = ctk.CTkFrame(self.principal)
+            toolbar_frame.grid(row=20, column=0, columnspan=5, padx=10, sticky="ew")
+            toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
+            toolbar.update()
     
 
 
@@ -435,9 +457,13 @@ class VentanaSimulacion:
             messagebox.showinfo("Discretizador", "Al desabilitar el discretizador el instrumento sera analogico")
             self.entry_sd.configure(state='disabled')
             self.entry_vid.configure(state='disabled')
+            self.bandera_discretizador=False
+            print('me dio gay')
         else:
             self.entry_sd.configure(state='normal')
             self.entry_vid.configure(state='normal')
+            self.bandera_discretizador=True
+            print('ya no soy gay')
 
 #Configuracion discretizador
     def discretizador_config(self):
@@ -469,7 +495,7 @@ class VentanaSimulacion:
         self.aceptar3_button.grid(row=6, column=3, columnspan=3)
 
 
-        if(self.simulando==True):
+        if(self.simulando==True and self.bandera_discretizador==True):
             self.label_ecuacion_discretizador = ctk.CTkLabel(self.principal, text=self.ecu_discretizador, font=("Arial", 15), pady=30)
             self.label_ecuacion_discretizador.grid(row=7, column=0, columnspan=5)
 
@@ -508,80 +534,54 @@ class VentanaSimulacion:
         self.limpiarpanel()
         self.label_instrumento = ctk.CTkLabel(self.principal, text="EMULADOR", font=("Arial Black", 20), padx=30)
         self.label_instrumento.grid(row=0, column=0, columnspan=5)
-        
-        self.se = 1 / (float(self.sd_var.get()) * float(self.sa_var.get()) * float(self.ss_var.get()))
-        self.vie = (-float(self.sd_var.get()) * float(self.sa_var.get()) * float(self.vis_var.get()) - float(self.sd_var.get()) * float(self.via_var.get()) - float(self.vid_var.get())) / (float(self.sd_var.get()) * float(self.sa_var.get()) * float(self.ss_var.get()))
-        self.fuc = 1 / (float(self.se))
-        self.vaf = -((float(self.fuc)) * (float(self.vie)))
-        print(f"Emulador: {self.vie}")
-        print(f"Emulador: {self.se}")
-        
-        self.se_var = ctk.StringVar()
-        self.se_var.set(str(self.se))
-        self.vie_var = ctk.StringVar()
-        self.vie_var.set(str(self.vie))
-        self.unidad_var = ctk.StringVar()
-        self.unidad_var.set(str(self.unidad))
-        self.fuc_var = ctk.StringVar()
-        self.fuc_var.set(str(self.fuc))
-        self.vaf_var = ctk.StringVar()
-        self.vaf_var.set(str(self.vaf))
-        
-        self.label_se1 = ctk.CTkLabel(self.principal, text="Sensibilidad:", font=("Arial", 15), pady=15)
-        self.label_se1.grid(row=2, column=0)
-        self.label_se = ctk.CTkLabel(self.principal, textvariable=self.se_var, font=("Arial", 15), padx=30)
-        self.label_se.grid(row=2, column=1, columnspan=5)
-        
-        self.label_vie1 = ctk.CTkLabel(self.principal, text="Valor inicial:", font=("Arial", 15), pady=15)
-        self.label_vie1.grid(row=3, column=0)
-        self.label_vie = ctk.CTkLabel(self.principal, textvariable=self.vie_var, font=("Arial", 15), padx=30)
-        self.label_vie.grid(row=3, column=1, columnspan=5)
-        
-        self.label_fe = ctk.CTkLabel(self.principal, text="Función Compuesta del Emulador", font=("Arial", 20),pady=25)
-        self.label_fe.grid(row=4, column=4,columnspan=5)
-        self.label_fc = ctk.CTkLabel(self.principal, textvariable=self.unidad_var, font=("Arial", 15), pady=15)
-        self.label_fc.grid(row=5, column=3, padx=10, pady=20)
-        self.label_fc1 = ctk.CTkLabel(self.principal, text="=", font=("Arial", 15), pady=15)
-        self.label_fc1.grid(row=5, column=4)
-        self.label_fc2 = ctk.CTkLabel(self.principal, textvariable=self.se_var, font=("Arial", 15))
-        self.label_fc2.grid(row=5, column=5)
-        self.label_fc3a = ctk.CTkLabel(self.principal, text="bDAS", font=("Arial", 15))
-        self.label_fc3a.grid(row=5, column=6)
-        
-        if self.vie > 0:
-            self.label_fc3 = ctk.CTkLabel(self.principal, text="+", font=("Arial", 15))
-            self.label_fc3.grid(row=5, column=7,columnspan=2)
-        self.label_fc4 = ctk.CTkLabel(self.principal, textvariable=self.vie_var, font=("Arial", 15))
-        self.label_fc4.grid(row=5, column=8)
-        
-        self.label_fc5 = ctk.CTkLabel(self.principal, text="Función Compuesta del Instrumento", font=("Arial", 20),pady=25)
-        self.label_fc5.grid(row=6, column=4,columnspan=5)
+
+
+        if(self.simulando==True):
+            self.label_ecuacion_emulador = ctk.CTkLabel(self.principal, text=self.ecu_emulador, font=("Arial", 15), pady=30)
+            self.label_ecuacion_emulador.grid(row=1, column=0, columnspan=5)
+
+            # Configurar las columnas de la cuadrícula para que se expandan
+            # for i in range(5):
+            #     self.principal.grid_columnconfigure(i, weight=1)
+
+
+
+            # Crear una figura de Matplotlib
+            fig_emulador = Figure(figsize=(5, 4), dpi=100)
+            plt_emulador = fig_emulador.add_subplot(111)
+
+            if self.bandera_discretizador == True:
+                plt_emulador.plot(self.discretizador_int, self.emulador, marker='o', linestyle='')
+            else:
+                plt_emulador.plot(self.acondicionador, self.emulador, marker='o', linestyle='')
+
+
+            
+
+
+
+            # # Crear un canvas para la figura de Matplotlib y agregarlo a la ventana de customtkinter
+            canvas = FigureCanvasTkAgg(fig_emulador, master=self.principal)
+            canvas.draw()
+            canvas.get_tk_widget().grid(row=2, column=0, columnspan=5, padx=10, sticky="nsew")
+
+            # # Crear la barra de herramientas de navegación de Matplotlib y agregarla a la ventana de customtkinter
+            toolbar_frame = ctk.CTkFrame(self.principal)
+            toolbar_frame.grid(row=3, column=0, columnspan=5, padx=10, sticky="ew")
+            toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
+            toolbar.update()
         
         
-        self.label_f = ctk.CTkLabel(self.principal, text="bDAS/CTAS", font=("Arial", 15), pady=15)
-        self.label_f.grid(row=7, column=3, padx=10, pady=20)
-        self.label_f1 = ctk.CTkLabel(self.principal, text="=", font=("Arial", 15), pady=15)
-        self.label_f1.grid(row=7, column=4)
-        self.label_f2 = ctk.CTkLabel(self.principal, textvariable=self.fuc_var, font=("Arial", 15))
-        self.label_f2.grid(row=7, column=5)
-        self.label_f3a = ctk.CTkLabel(self.principal, textvariable=self.unidad_var, font=("Arial", 15))
-        self.label_f3a.grid(row=7, column=6)
-        
-        if self.vaf > 0:
-            self.label_f3 = ctk.CTkLabel(self.principal, text="+", font=("Arial", 15))
-            self.label_f3.grid(row=7, column=7)
-        self.label_f4 = ctk.CTkLabel(self.principal, textvariable=self.vaf_var, font=("Arial", 15))
-        self.label_f4.grid(row=7, column=8)
-        
-        
-        #Configuracion Simulador
+    
+    
+    #Configuracion Simulador
 
     def simular_config(self):
         self.simulando=True
         #sensor
         self.ecu_sensor = self.sensibilidad_sensor+' * '+self.unidad+' + '+self.valor_inicial
         self.ecu_acondicionador = self.sensibilidad_ac+' * '+self.unidad_seleccionada+' + '+self.valor_iniciala
-        self.ecu_discretizador = self.sensibilidad_di+' * mv + 0.5'
+        
         # self.limpiarpanel()
         # self.label_instrumento = ctk.CTkLabel(self.principal, text="Simulación", font=("Arial Black", 20), padx=30)
         # self.label_instrumento.grid(row=0, column=0, columnspan=5)
@@ -639,12 +639,34 @@ class VentanaSimulacion:
         # plt.grid(True)
         # plt.show()
 
-        self.sensibilidad_digono = float(self.sensibilidad_di)
+        if self.bandera_discretizador==True:
+            self.ecu_discretizador = self.sensibilidad_di+' * mv + 0.5'
+            self.sensibilidad_digono = float(self.sensibilidad_di)
         
-        self.discretizador = (self.acondicionador * self.sensibilidad_digono) + 0.5
+            self.discretizador = (self.acondicionador * self.sensibilidad_digono) + 0.5
         
-        # # Convertir los valores de discretizador a enteros
-        self.discretizador_int = self.discretizador.astype(int)
+            # # Convertir los valores de discretizador a enteros
+            self.discretizador_int = self.discretizador.astype(int)
+
+            self.sensibilidad_emulador = 1/(self.sensibilidadgono*self.sensibilidad_acgono*self.sensibilidad_digono)
+            self.valor_inicial_em = (((((self.inicialgono*self.sensibilidad_acgono)+self.valor_inicial_acgono)*self.sensibilidad_digono)+0.5)/(self.sensibilidadgono*self.sensibilidad_acgono*self.sensibilidad_digono))*(-1)
+            print('Aqui vamos')
+            print(self.sensibilidad_emulador)
+            print(self.valor_inicial_em)
+            self.ecu_emulador=str(self.sensibilidad_emulador)+' * (bD/CTAS) + '+str(self.valor_inicial_em)
+            self.emulador=(self.discretizador_int*self.sensibilidad_emulador)+self.valor_inicial_em
+        else:
+            pass
+            self.sensibilidad_emulador = 1/(self.sensibilidadgono*self.sensibilidad_acgono)
+            self.valor_inicial_em = ((((self.inicialgono*self.sensibilidad_acgono)+self.valor_inicial_acgono))/(self.sensibilidadgono*self.sensibilidad_acgono))*(-1)
+            print('Aqui vamos')
+            print(self.sensibilidad_emulador)
+            print(self.valor_inicial_em)
+            self.ecu_emulador=str(self.sensibilidad_emulador)+' * (volataje) + '+str(self.valor_inicial_em)
+            self.emulador=(self.acondicionador*self.sensibilidad_emulador)+self.valor_inicial_em
+
+
+
         
         # plt.figure()
         # plt.plot(mesurando, discretizador_int, marker='o', linestyle='')
@@ -653,6 +675,10 @@ class VentanaSimulacion:
         # plt.ylabel('Discretizador')
         # plt.grid(True)
         # plt.show()
+
+
+
+
 
        
         
