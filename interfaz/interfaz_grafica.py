@@ -964,159 +964,167 @@ class VentanaDiseno:
 #Configuracion Diseñar
 
     def disenar_config(self):
-        self.disenando=True
-        
-        # # # Obtener los valores mínimo y máximo del rango
-        self.ri = float(self.rangomi)
-        self.rf = float(self.rangoma)
-        self.resolucion1 = float(self.resolucion)
-        self.alcance1 = float(self.alcance)
-        self.n1 = float(self.n)
-        self.vref1 = float(self.vref)
-        self.sensibilidadgono = float(self.sensibilidad_sensor)
-        self.inicialgono = float(self.valor_inicial)
-        self.vie1 = float(self.vie)
-      
-        
-        
-        
-        
-        #sensor
-        
-        if self.inicialgono > 0:
-            self.ecu_sen = '+' + str(self.inicialgono)
-        else:
-            self.ecu_sen = str(self.inicialgono)
+        try:
             
-        self.ecu_sensor = self.unidad_seleccionada+ ' = '+self.sensibilidad_sensor+' '+self.unidad+self.ecu_sen
+
+            self.disenando=True
         
+            # # # Obtener los valores mínimo y máximo del rango
+            self.ri = float(self.rangomi)
+            self.rf = float(self.rangoma)
+            self.resolucion1 = float(self.resolucion)
+            self.alcance1 = float(self.alcance)
+            self.n1 = float(self.n)
+            self.vref1 = float(self.vref)
+            self.sensibilidadgono = float(self.sensibilidad_sensor)
+            self.inicialgono = float(self.valor_inicial)
+            self.vie1 = float(self.vie)
         
-        #Caso 1
-        #En este caso tienen que dar: sensor, rango, resolucion y vref
-        
-        if(self.rf != 0 and self.resolucion1 != 0 and self.vref1 != 0 and self.vie1 == 0):
-            #Ecuacion 1
-            self.log_2 = math.log2(((1/self.resolucion1)*(self.rf - self.ri)) + 1)
-            self.nresul = round(self.log_2)
-            #Ecuacion 2
-            self.sd = (2**self.nresul)/self.vref1
-            #Ecuacion 3
-            self.sa = 1/(self.resolucion1 * self.sensibilidadgono * self.sd)
-            #Ecuacion 4
-            self.inicial_ac = -(0.5/self.sd) - (self.sa * ((self.sensibilidadgono * self.ri) + self.inicialgono))
-            #Ecuacion 5
-            self.alcanceres = (self.rf - self.ri)
-            #Ecuacion Valor inicial emulador según libro
-            self.resvie1 = (-(self.sd * self.sa * self.inicialgono)-(self.sd * self.inicial_ac) - 0.5)/(self.sd * self.sa * self.sensibilidadgono)
             
-            self.resrango = 'Rango:'+str(self.rf)+' a '+str(self.ri)
-            self.resresolucion = 'Resolución:' +self.resolucion
-            self.rescodigo = 'Código CAD:' +str(self.nresul)
-            self.resalcance = 'Alcance:' +str(self.alcanceres)
-            self.resvref = 'Vref:' +self.vref
-            self.ressd =  'BDAS/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
-            if self.inicial_ac > 0:
-                self.ecu_acon = '+' + str(self.inicial_ac)
+            
+            
+            
+            #sensor
+            
+            if self.inicialgono > 0:
+                self.ecu_sen = '+' + str(self.inicialgono)
             else:
-                self.ecu_acon = str(self.inicial_ac)
-           
-            self.ressa = self.unidad_seleccionadac+' = '+str(self.sa)+self.unidad_seleccionada+self.ecu_acon
-            if self.resvie1 > 0:
-                self.ecu_vie = '+' + str(self.resvie1)
-            else:
-                self.ecu_vie = str(self.resvie1)
-            
-            self.resemulador = self.unidad+' = '+self.resolucion+'BDAS/CTAS'+self.ecu_vie
-            
-        elif(self.rf != 0 and self.n1 != 0 and self.vref1 != 0 and self.vie1 == 0):
-            #Caso 2
-            #En este caso tienen que dar: sensor, rango, n y vref
-            #se coge ecuación 2
-            self.sd = (2**self.nresul)/self.vref1
-            #Ecuación 6
-            self.sa2 = ((2**self.n1)-1)/(self.sd * self.sensibilidadgono * (self.rf - self.ri))
-            #Ecuación 7
-            self.resolucion2 = 1/(self.sd * self.sa2 * self.sensibilidadgono)
-            #Se coge ecuación 4 para el valor inicial del acondicionador
-            self.inicial_ac = -(0.5/self.sd) - (self.sa2 * ((self.sensibilidadgono * self.ri) + self.inicialgono))
-            #Ecuacion 5
-            self.alcanceres = (self.rf - self.ri)
-            #Ecuacion Valor inicial emulador según libro
-            self.resvie1 = (-(self.sd * self.sa2 * self.inicialgono)-(self.sd * self.inicial_ac) - 0.5)/(self.sd * self.sa * self.sensibilidadgono)
-            
-            self.resrango = 'Rango: '+self.rangoma+' a '+self.rangomi
-            self.resresolucion = 'Resolución:' +str(self.resolucion2)
-            self.rescodigo = 'Código CAD:' +self.n
-            self.resalcance = 'Alcance:' +str(self.alcanceres)
-            self.resvref = 'Vref:' +self.vref
-            self.ressd =  'BDAS/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
-            if self.inicial_ac > 0:
-                self.ecu_acon = '+' + str(self.inicial_ac)
-            else:
-                self.ecu_acon = str(self.inicial_ac)
-           
-            self.ressa = self.unidad_seleccionadac+' = '+str(self.sa)+self.unidad_seleccionada+self.ecu_acon
-            if self.resvie1 > 0:
-                self.ecu_vie = '+' + str(self.resvie1)
-            else:
-                self.ecu_vie = str(self.resvie1)
-            
-            self.resemulador = self.unidad+' = '+str(self.resolucion2)+'BDAS/CTAS'+self.ecu_vie
-        elif(self.alcance1 != 0 and self.resolucion1 != 0 and self.vref1 != 0 and self.vie1 != 0):
-            #Caso 3
-            #En este caso tienen que dar: Alcance, resolución, vref, valor inicial emulador y sensor}
-            #Ecuación 1
-            self.log_2 = math.log2(((1/self.resolucion1)*(self.alcance1)) + 1)
-            self.nresul = round(self.log_2)
-            #Ecuación 2
-            self.sd = (2**self.nresul)/self.vref1
-            #Ecuación 3
-            self.sa = 1/(self.resolucion1 * self.sensibilidadgono * self.sd)
-            #Ecuacion 8
-            self.rmin = round(self.vie1)
-            #Ecuacion 9
-            self.rmax = self.alcance1 + self.rmin
-            #Ecuacion 4
-            self.inicial_ac = -(0.5/self.sd) - (self.sa * ((self.sensibilidadgono * self.rmin) + self.inicialgono))
-            
-            self.resrango = 'Rango:'+str(self.rmax)+' a '+str(self.rmin)
-            self.resresolucion = 'Resolución:' +self.resolucion
-            self.rescodigo = 'Código CAD:' +str(self.nresul)
-            self.resalcance = 'Alcance:' +self.alcance
-            self.resvref = 'Vref:' +self.vref
-            self.ressd =  'BDAS/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
-            if self.inicial_ac > 0:
-                self.ecu_acon = '+' + str(self.inicial_ac)
-            else:
-                self.ecu_acon = str(self.inicial_ac)
-           
-            self.ressa = self.unidad_seleccionadac+' = '+str(self.sa)+self.unidad_seleccionada+self.ecu_acon
-            self.vief = float(self.vie)
-            if self.vief > 0:
-                self.ecu_vie = '+' + str(self.vief)
-            else:
-                self.ecu_vie = str(self.vief)
-            
-            self.resemulador = self.unidad+' = '+self.resolucion+'BDAS/CTAS'+self.ecu_vie
-        else:
-            self.error = 'La información proporcionada no es correcta por lo tanto no se pueden observar los resultados.'
-            self.errors = 'Recordar que: Pandora versión 1.0 tiene 3 casos de diseño por favor revisar estos casos.'
-            
-       
+                self.ecu_sen = str(self.inicialgono)
                 
-        if self.bandera_discretizador==True:
+            self.ecu_sensor = self.unidad_seleccionada+ ' = '+self.sensibilidad_sensor+' '+self.unidad+self.ecu_sen
             
-            print('Aqui vamos')
             
-        else:
-            pass
-            self.sensibilidad_emulador = 1/(self.sensibilidadgono*self.sensibilidad_acgono)
-            self.valor_inicial_em = ((((self.inicialgono*self.sensibilidad_acgono)+self.valor_inicial_acgono))/(self.sensibilidadgono*self.sensibilidad_acgono))*(-1)
-            print('Aqui vamos')
-            print(self.sensibilidad_emulador)
-            print(self.valor_inicial_em)
-            self.ecu_emulador=str(self.sensibilidad_emulador)+' * (volataje) + '+str(self.valor_inicial_em)
-            self.emulador=(self.acondicionador*self.sensibilidad_emulador)+self.valor_inicial_em
+            #Caso 1
+            #En este caso tienen que dar: sensor, rango, resolucion y vref
+            
+            if(self.rf != 0 and self.resolucion1 != 0 and self.vref1 != 0 and self.vie1 == 0):
+                #Ecuacion 1
+                self.log_2 = math.log2(((1/self.resolucion1)*(self.rf - self.ri)) + 1)
+                self.nresul = round(self.log_2)
+                #Ecuacion 2
+                self.sd = (2**self.nresul)/self.vref1
+                #Ecuacion 3
+                self.sa = 1/(self.resolucion1 * self.sensibilidadgono * self.sd)
+                #Ecuacion 4
+                self.inicial_ac = -(0.5/self.sd) - (self.sa * ((self.sensibilidadgono * self.ri) + self.inicialgono))
+                #Ecuacion 5
+                self.alcanceres = (self.rf - self.ri)
+                #Ecuacion Valor inicial emulador según libro
+                self.resvie1 = (-(self.sd * self.sa * self.inicialgono)-(self.sd * self.inicial_ac) - 0.5)/(self.sd * self.sa * self.sensibilidadgono)
+                
+                self.resrango = 'Rango:'+str(self.rf)+' a '+str(self.ri)
+                self.resresolucion = 'Resolución:' +self.resolucion
+                self.rescodigo = 'Código CAD:' +str(self.nresul)
+                self.resalcance = 'Alcance:' +str(self.alcanceres)
+                self.resvref = 'Vref:' +self.vref
+                self.ressd =  'BDAS/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
+                if self.inicial_ac > 0:
+                    self.ecu_acon = '+' + str(self.inicial_ac)
+                else:
+                    self.ecu_acon = str(self.inicial_ac)
+            
+                self.ressa = self.unidad_seleccionadac+' = '+str(self.sa)+self.unidad_seleccionada+self.ecu_acon
+                if self.resvie1 > 0:
+                    self.ecu_vie = '+' + str(self.resvie1)
+                else:
+                    self.ecu_vie = str(self.resvie1)
+                
+                self.resemulador = self.unidad+' = '+self.resolucion+'BDAS/CTAS'+self.ecu_vie
+                
+            elif(self.rf != 0 and self.n1 != 0 and self.vref1 != 0 and self.vie1 == 0):
+                #Caso 2
+                #En este caso tienen que dar: sensor, rango, n y vref
+                #se coge ecuación 2
+                self.sd = (2**self.nresul)/self.vref1
+                #Ecuación 6
+                self.sa2 = ((2**self.n1)-1)/(self.sd * self.sensibilidadgono * (self.rf - self.ri))
+                #Ecuación 7
+                self.resolucion2 = 1/(self.sd * self.sa2 * self.sensibilidadgono)
+                #Se coge ecuación 4 para el valor inicial del acondicionador
+                self.inicial_ac = -(0.5/self.sd) - (self.sa2 * ((self.sensibilidadgono * self.ri) + self.inicialgono))
+                #Ecuacion 5
+                self.alcanceres = (self.rf - self.ri)
+                #Ecuacion Valor inicial emulador según libro
+                self.resvie1 = (-(self.sd * self.sa2 * self.inicialgono)-(self.sd * self.inicial_ac) - 0.5)/(self.sd * self.sa * self.sensibilidadgono)
+                
+                self.resrango = 'Rango: '+self.rangoma+' a '+self.rangomi
+                self.resresolucion = 'Resolución:' +str(self.resolucion2)
+                self.rescodigo = 'Código CAD:' +self.n
+                self.resalcance = 'Alcance:' +str(self.alcanceres)
+                self.resvref = 'Vref:' +self.vref
+                self.ressd =  'BDAS/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
+                if self.inicial_ac > 0:
+                    self.ecu_acon = '+' + str(self.inicial_ac)
+                else:
+                    self.ecu_acon = str(self.inicial_ac)
+            
+                self.ressa = self.unidad_seleccionadac+' = '+str(self.sa)+self.unidad_seleccionada+self.ecu_acon
+                if self.resvie1 > 0:
+                    self.ecu_vie = '+' + str(self.resvie1)
+                else:
+                    self.ecu_vie = str(self.resvie1)
+                
+                self.resemulador = self.unidad+' = '+str(self.resolucion2)+'BDAS/CTAS'+self.ecu_vie
+            elif(self.alcance1 != 0 and self.resolucion1 != 0 and self.vref1 != 0 and self.vie1 != 0):
+                #Caso 3
+                #En este caso tienen que dar: Alcance, resolución, vref, valor inicial emulador y sensor}
+                #Ecuación 1
+                self.log_2 = math.log2(((1/self.resolucion1)*(self.alcance1)) + 1)
+                self.nresul = round(self.log_2)
+                #Ecuación 2
+                self.sd = (2**self.nresul)/self.vref1
+                #Ecuación 3
+                self.sa = 1/(self.resolucion1 * self.sensibilidadgono * self.sd)
+                #Ecuacion 8
+                self.rmin = round(self.vie1)
+                #Ecuacion 9
+                self.rmax = self.alcance1 + self.rmin
+                #Ecuacion 4
+                self.inicial_ac = -(0.5/self.sd) - (self.sa * ((self.sensibilidadgono * self.rmin) + self.inicialgono))
+                
+                self.resrango = 'Rango:'+str(self.rmax)+' a '+str(self.rmin)
+                self.resresolucion = 'Resolución:' +self.resolucion
+                self.rescodigo = 'Código CAD:' +str(self.nresul)
+                self.resalcance = 'Alcance:' +self.alcance
+                self.resvref = 'Vref:' +self.vref
+                self.ressd =  'BDAS/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
+                if self.inicial_ac > 0:
+                    self.ecu_acon = '+' + str(self.inicial_ac)
+                else:
+                    self.ecu_acon = str(self.inicial_ac)
+            
+                self.ressa = self.unidad_seleccionadac+' = '+str(self.sa)+self.unidad_seleccionada+self.ecu_acon
+                self.vief = float(self.vie)
+                if self.vief > 0:
+                    self.ecu_vie = '+' + str(self.vief)
+                else:
+                    self.ecu_vie = str(self.vief)
+                
+                self.resemulador = self.unidad+' = '+self.resolucion+'BDAS/CTAS'+self.ecu_vie
+            else:
+                self.error = 'La información proporcionada no es correcta por lo tanto no se pueden observar los resultados.'
+                self.errors = 'Recordar que: Pandora versión 1.0 tiene 3 casos de diseño por favor revisar estos casos.'
+                
+        
+                    
+            if self.bandera_discretizador==True:
+                
+                print('Aqui vamos')
+                
+            else:
+                pass
+                self.sensibilidad_emulador = 1/(self.sensibilidadgono*self.sensibilidad_acgono)
+                self.valor_inicial_em = ((((self.inicialgono*self.sensibilidad_acgono)+self.valor_inicial_acgono))/(self.sensibilidadgono*self.sensibilidad_acgono))*(-1)
+                print('Aqui vamos')
+                print(self.sensibilidad_emulador)
+                print(self.valor_inicial_em)
+                self.ecu_emulador=str(self.sensibilidad_emulador)+' * (volataje) + '+str(self.valor_inicial_em)
+                self.emulador=(self.acondicionador*self.sensibilidad_emulador)+self.valor_inicial_em
+
+
+        except:
+            messagebox.showerror("Error!", "Hay un error en los datos")
+
 
     def limpiarpanel(self):
         for widget in self.principal.winfo_children():
