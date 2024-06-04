@@ -220,6 +220,8 @@ class VentanaSimulacion:
 
             plt_instrumento.plot(self.mesurando, self.emulador, marker='o', linestyle='')
             
+            plt_instrumento.set_xlabel(f'Mesurando:{self.unidad}')
+            plt_instrumento.set_ylabel(f'Función Compuesta: bD/CTAS')
             
             self.prueba = ctk.CTkLabel(self.principal, text=self.ecu_instumento, font=("Arial", 15), pady=30)
             self.prueba.grid(row=22, column=3)
@@ -301,10 +303,9 @@ class VentanaSimulacion:
        
             
             plt_sensor.plot(self.mesurando, self.sensor, marker='o', linestyle='-')
-            print(self.ri)
-            print(self.rf)
-            print(self.sensibilidadgono)
-            print(self.inicialgono)
+           
+            plt_sensor.set_xlabel(f'Mesurando:{self.unidad}')
+            plt_sensor.set_ylabel(f'Sensor: {self.unidad_seleccionada}')
        
 
             # Crear un canvas para la figura de Matplotlib y agregarlo a la ventana de customtkinter
@@ -347,7 +348,7 @@ class VentanaSimulacion:
         self.label_instrumento = ctk.CTkLabel(self.principal, text="ACONDICIONADOR", font=("Arial Black", 20), padx=30)
         self.label_instrumento.grid(row=0, column=0, columnspan=5)
 
-        self.label_magnitudac = ctk.CTkLabel(self.principal, text="Magnitud de salida:", font=("Arial", 15),pady=25,padx=10)
+        self.label_magnitudac = ctk.CTkLabel(self.principal, text="Magnitud de salida:", font=("Arial", 15), pady=25, padx=10)
         self.label_magnitudac.grid(row=2, column=0)
         
         self.magniac = ["Voltaje", "Corriente"]
@@ -356,17 +357,17 @@ class VentanaSimulacion:
         self.combobox_magniac.grid(row=2, column=2)
         
         self.combobox_unidada = ctk.CTkComboBox(self.principal, values=['unidad'])
-        self.combobox_unidada.grid(row=2, column=3,padx=10)
+        self.combobox_unidada.grid(row=2, column=3, padx=10)
         
         self.label_sa = ctk.CTkLabel(self.principal, text="Sensibilidad:", font=("Arial", 15), pady=30)
-        self.label_sa.grid(row=3, column=0,pady=5)
+        self.label_sa.grid(row=3, column=0, pady=5)
 
         self.sa_var = ctk.StringVar(value="0")  
         self.entry_sa = ctk.CTkEntry(self.principal, textvariable=self.sa_var, font=("Arial", 12))
         self.entry_sa.grid(row=3, column=2)
         
         self.label_via = ctk.CTkLabel(self.principal, text="Valor inicial:", font=("Arial", 15), pady=30)
-        self.label_via.grid(row=4, column=0,pady=5)
+        self.label_via.grid(row=4, column=0, pady=5)
 
         self.via_var = ctk.StringVar(value="0")  
         self.entry_via = ctk.CTkEntry(self.principal, textvariable=self.via_var, font=("Arial", 12))
@@ -375,20 +376,21 @@ class VentanaSimulacion:
         self.aceptar3_button = ctk.CTkButton(self.principal, text="Aceptar", command=self.guardar3_datos)
         self.aceptar3_button.grid(row=5, column=0, columnspan=3, pady=20)
 
-
-
-        if(self.simulando==True):
+        if self.simulando:
             self.label_ecuacion_acondiconador = ctk.CTkLabel(self.principal, text=self.ecu_acondicionador, font=("Arial", 15), pady=30)
             self.label_ecuacion_acondiconador.grid(row=6, column=0, columnspan=5)
             
             # Crear una figura de Matplotlib
             fig_acondicionador = Figure(figsize=(5, 4), dpi=100)
             plt_acondicionador = fig_acondicionador.add_subplot(111)
+            
             plt_acondicionador.grid(True)
-           
-           
+        
             plt_acondicionador.plot(self.sensor, self.acondicionador, marker='o', linestyle='-')
-           
+            
+            # Agregar nombres a los ejes
+            plt_acondicionador.set_xlabel(f'Sensor:{self.unidad_seleccionada}')
+            plt_acondicionador.set_ylabel(f'Acondicionador: {self.unidad_seleccionadac}')
 
             # Crear un canvas para la figura de Matplotlib y agregarlo a la ventana de customtkinter
             canvas = FigureCanvasTkAgg(fig_acondicionador, master=self.principal)
@@ -400,6 +402,7 @@ class VentanaSimulacion:
             toolbar_frame.grid(row=8, column=0, columnspan=5, padx=10, sticky="ew")
             toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
             toolbar.update()
+
        
        
     def guardar4_datos(self):
@@ -462,7 +465,8 @@ class VentanaSimulacion:
 
             plt_discretizador.plot(self.acondicionador, self.discretizador_int, marker='o', linestyle='')
 
-
+            plt_discretizador.set_xlabel(f'Acondicionador: {self.unidad_seleccionadac}')
+            plt_discretizador.set_ylabel(f'Discretizador: Bd/CTAS')
 
             # # Crear un canvas para la figura de Matplotlib y agregarlo a la ventana de customtkinter
             canvas = FigureCanvasTkAgg(fig_discretizador, master=self.principal)
@@ -499,9 +503,12 @@ class VentanaSimulacion:
             plt_emulador.grid(True)
             if self.bandera_discretizador == True:
                 plt_emulador.plot(self.discretizador_int, self.emulador, marker='o', linestyle='')
+                plt_emulador.set_xlabel(f'Discretizador: Bd/CTAS')
+                plt_emulador.set_ylabel(f'Emulador: {self.unidad}')
             else:
                 plt_emulador.plot(self.acondicionador, self.emulador, marker='o', linestyle='')
-
+                plt_emulador.set_xlabel(f'Acondicionador: {self.unidad_seleccionadac}')
+                plt_emulador.set_ylabel(f'Emulador: {self.unidad}')
 
             
 
