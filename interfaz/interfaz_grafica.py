@@ -100,16 +100,33 @@ class VentanaSimulacion:
         self.play = ctk.CTkImage(light_image=Image.open(os.path.join(carpeta_imagenes, "play.png")),dark_image=Image.open(os.path.join(carpeta_imagenes, "play.png")), size=(37, 30))
 
         self.unidad_dict = {}
-        self.unidad_dict["Masa"] = ["M/gr", "M/Kgr"]
-        self.unidad_dict["Presion"] = ["P/Pa", "P/hPa", "P/kPa"]
-        self.unidad_dict["Temperatura"] = ["T/°C", "T/K", "T/°F"]
-        self.unidad_dict["Iluminancia"] = ["Ev/lx"]
-        self.unidad_dict["Longitud"] = ["L/m", "L/cm"]
+        self.unidad_dict["Masa"] = ["ugr","mgr","cgr", "dgr","gr","Dgr","hgr", "Kgr","Mgr"]
+        self.unidad_dict["Presion"] = ["uPa","mPa","cPa", "dPa","Pa","DPa","hPa", "KPa","MPa"]
+        self.unidad_dict["Temperatura"] = ["°C", "K", "°F"]
+        self.unidad_dict["Iluminancia"] = ["lx"]
+        self.unidad_dict["Longitud"] = ["um","mm","cm", "dm","m","Dm","hm", "Km","Mm"]
+        self.unidad_dict["Resistividad"] = ["KΩ","Ω","mΩ"]
+        self.unidad_dict["Voltaje"] = ["v","mv","uv"]
+        self.unidad_dict["Intensidad"] = ["uA", "mA", "A"]
+        self.unidad_dict["Carga"] = ["C", "mC", "uC"]
+        self.unidad_dict["Sustancia"] = ["umol","mmol","cmol", "dmol","mol","Dmol","hmol", "Kmol","Mmol"]
+        self.unidad_dict["Frecuencia"] = ["mHz", "Hz", "KHz","MHz","GHz"]
+        self.unidad_dict["Fuerza"] = ["mN", "cN", "dN","N","DN","hN","kN"]
+        self.unidad_dict["Energía"] = ["mJ", "cJ", "dJ","J","DJ","hJ","kJ"]
+        self.unidad_dict["Potencia"] = ["mW", "cW", "dW","W","DW","hW","kW"]
+        self.unidad_dict["Flujo Mag"] = ["mWb", "cWb", "dWb","Wb","DWb","hWb","kWb"]
+        self.unidad_dict["Capacitancia"] = ["pF","uF","mF", "cF", "dF","F"]
+        self.unidad_dict["Inductancia"] = ["pH","uH","mH", "cH", "dH","H"]
+        
+        
+        
         
         self.unidad_2 = {}
-        self.unidad_2["Voltaje"] = ["V/v","V/mv","V/uv"]
-        self.unidad_2["Corriente"] = ["I/uA", "I/mA", "I/A"]
+        self.unidad_2["Voltaje"] = ["v","mv","uv"]
+        self.unidad_2["Corriente"] = ["uA", "mA", "A"]
+        self.unidad_2["Carga"] = ["C", "mC", "uC"]
 
+       
         self.bandera_discretizador=True
        
 
@@ -135,35 +152,52 @@ class VentanaSimulacion:
 
         self.root.mainloop()
 
-    def seleccionar_magnitud(self,eleccion):
-        print('Prueba')
-        lista_unidades = self.unidad_dict.get(eleccion, [])
-        # Ahora unidades_magnitud contendrá las unidades asociadas a la magnitud especificada
-        print(lista_unidades)
-        self.combobox_unidad.configure(values=lista_unidades)
-        
-    def seleccionar_mag(self,eleccion):
-        print('hola')
-        lista_unidad = self.unidad_2.get(eleccion, [])
-        # Ahora unidades_magnitud contendrá las unidades asociadas a la magnitud especificada
-        print(lista_unidad)
-        self.combobox_unidads.configure(values=lista_unidad)
-    def seleccionar_maga(self,eleccion):
-        print('hola')
-        lista_unidada = self.unidad_2.get(eleccion, [])
-        # Ahora unidades_magnitud contendrá las unidades asociadas a la magnitud especificada
-        print(lista_unidada)
-        self.combobox_unidada.configure(values=lista_unidada)
+    def seleccionar_magnitud(self, choice):
+        print(f"Magnitud seleccionada: {choice}")
+        # Actualiza las unidades en función de la magnitud seleccionada
+        if choice == "Masa":
+            self.combobox_unidad.configure(values=["ugr","mgr","cgr", "dgr","gr","Dgr","hgr", "Kgr","Mgr"])
+        elif choice == "Presion":
+            self.combobox_unidad.configure(values=["uPa","mPa","cPa", "dPa","Pa","DPa","hPa", "KPa","MPa"])
+        elif choice == "Temperatura":
+            self.combobox_unidad.configure(values=["°C", "K", "°F"])
+        elif choice == "Iluminancia":
+            self.combobox_unidad.configure(values=["lx"])
+        elif choice == "Longitud":
+            self.combobox_unidad.configure(values=["um","mm","cm", "dm","m","Dm","hm", "Km","Mm"])
+        elif choice == "Resistividad":
+            self.combobox_unidad.configure(values=["KΩ","Ω","mΩ"])
+        elif choice == "Voltaje":
+            self.combobox_unidad.configure(values=["v","mv","uv"])
+        elif choice == "Intensidad":
+            self.combobox_unidad.configure(values=["uA", "mA", "A"])
+        elif choice == "Carga":
+            self.combobox_unidad.configure(values=["C", "mC", "uC"])
+        elif choice == "Sustancia":
+            self.combobox_unidad.configure(values=["umol","mmol","cmol", "dmol","mol","Dmol","hmol", "Kmol","Mmol"])
+        elif choice == "Frecuencia":
+            self.combobox_unidad.configure(values=["mHz", "Hz", "KHz","MHz","GHz"])
+        elif choice == "Fuerza":
+            self.combobox_unidad.configure(values=["mN", "cN", "dN","N","DN","hN","kN"])
+        elif choice == "Energía":
+            self.combobox_unidad.configure(values=["mJ", "cJ", "dJ","J","DJ","hJ","kJ"])
+        elif choice == "Potencia":
+            self.combobox_unidad.configure(values=["mW", "cW", "dW","W","DW","hW","kW"])
+        elif choice == "Flujo Mag":
+            self.combobox_unidad.configure(values=["mWb", "cWb", "dWb","Wb","DWb","hWb","kWb"])
+        elif choice == "Capacitancia":
+            self.combobox_unidad.configure(values=["pF","uF","mF", "cF", "dF","F"])
+        elif choice == "Inductancia":
+            self.combobox_unidad.configure(values=["pH","uH","mH", "cH", "dH","H"])
 
-
-
+        self.choiceori = choice[:2]
     def guardari_datos(self):
         self.magnitud = self.magnitud_var.get()
         self.unidad = self.combobox_unidad.get()
         self.rangoma = self.rango_max_var.get()
         self.rangomi = self.rango_min_var.get()
         self.salto = self.iteracion_var.get()
-        
+        print(f"{self.choiceori}")
         
    
 # Configuración instrumento
@@ -176,10 +210,11 @@ class VentanaSimulacion:
         self.label_magnitud.grid(row=6, column=0)
 
         # Combobox for selecting magnitudes
-        self.magnitudes = ["Masa", "Presion", "Temperatura", "Iluminancia", "Longitud"]
-        self.magnitud_var = ctk.StringVar(value=self.magnitudes[0])
+        self.magnitudes = ["Masa", "Presion", "Temperatura", "Iluminancia", "Longitud","Resistividad","Voltaje","Intensidad","Carga","Sustancia","Frecuencia","Fuerza","Energía","Potencia","Flujo Mag","Capacitancia","Inductancia"]
+        self.magnitud_var = ctk.StringVar(value=self.magnitudes[1])
         self.combobox_magnitudes = ctk.CTkComboBox(self.principal, values=self.magnitudes, command=self.seleccionar_magnitud)
         self.combobox_magnitudes.grid(row=6, column=3)
+        
     # Sección para ingresar rango
         self.label_rango = ctk.CTkLabel(self.principal, text="Rango:", font=("Arial", 15), pady=30)
         self.label_rango.grid(row=16, column=0)
@@ -220,8 +255,8 @@ class VentanaSimulacion:
 
             plt_instrumento.plot(self.mesurando, self.emulador, marker='o', linestyle='')
             
-            plt_instrumento.set_xlabel(f'Mesurando:{self.unidad}')
-            plt_instrumento.set_ylabel(f'Función Compuesta: bD/CTAS')
+            plt_instrumento.set_xlabel(f'Mesurando:{self.choiceori}/{self.unidad}')
+            plt_instrumento.set_ylabel(f'Función de salida: FS/CTA')
             
             self.prueba = ctk.CTkLabel(self.principal, text=self.ecu_instumento, font=("Arial", 15), pady=30)
             self.prueba.grid(row=22, column=3)
@@ -244,17 +279,21 @@ class VentanaSimulacion:
         print(f"Magnitud seleccionada: {choice}")
         # Actualiza las unidades en función de la magnitud seleccionada
         if choice == "Voltaje":
-            self.combobox_unidads.configure(values=["Vs/V", "Vs/mV"])
-        elif choice == "Corriente":
-            self.combobox_unidads.configure(values=["Is/A", "Is/mA","Is/uA"])
-
+            self.combobox_unidads.configure(values=["V", "mV"])
+        elif choice == "Intensidad":
+            self.combobox_unidads.configure(values=["A", "mA","uA"])
+        elif choice == "Carga":
+            self.combobox_unidads.configure(values=["C", "mC","uC"])
+        
+        self.choicesen = choice[0]
     def guardar_datos(self):
         self.magnitud_seleccionada = self.magsensor_var.get()
         self.unidad_seleccionada = self.combobox_unidads.get()
         self.sensibilidad_sensor = self.ss_var.get()
         self.valor_inicial = self.vis_var.get()
         
-    
+        print(f"Magnitud: {self.choicesen}")
+
 
 #Configuracion sensor
     def sensor_config(self):
@@ -265,7 +304,7 @@ class VentanaSimulacion:
         self.label_magnitudsen = ctk.CTkLabel(self.principal, text="Magnitud de salida:", font=("Arial", 15),pady=25,padx=10)
         self.label_magnitudsen.grid(row=2, column=0)
         
-        self.magnisensor = ["Voltaje", "Corriente"]
+        self.magnisensor = ["Voltaje", "Intensidad","Carga"]
         self.magsensor_var = ctk.StringVar(value=self.magnisensor[0])
         self.combobox_magnisensor = ctk.CTkComboBox(self.principal, values=self.magnisensor, command=self.seleccionar_mag)
         self.combobox_magnisensor.grid(row=2, column=2)
@@ -294,7 +333,9 @@ class VentanaSimulacion:
 
         if(self.simulando==True):
             self.label_ecuacion_sensor = ctk.CTkLabel(self.principal, text=self.ecu_sensor, font=("Arial", 15), pady=30)
-            self.label_ecuacion_sensor.grid(row=6, column=0, columnspan=5)
+            self.label_ecuacion_sensor.grid(row=6, column=0, columnspan=3)
+            self.label_sensibilidad_sensor = ctk.CTkLabel(self.principal, text=f"Ss:{self.sensibilidad_sensor}{self.unidad_seleccionada}/{self.unidad}  V(0)s:{self.valor_inicial}", font=("Arial", 15), pady=30)
+            self.label_sensibilidad_sensor.grid(row=6, column=3)
 
             # Crear una figura de Matplotlib
             fig_sensor = Figure(figsize=(5, 4), dpi=100)
@@ -304,8 +345,8 @@ class VentanaSimulacion:
             
             plt_sensor.plot(self.mesurando, self.sensor, marker='o', linestyle='-')
            
-            plt_sensor.set_xlabel(f'Mesurando:{self.unidad}')
-            plt_sensor.set_ylabel(f'Sensor: {self.unidad_seleccionada}')
+            plt_sensor.set_xlabel(f'Mesurando:{self.choiceori}/{self.unidad}')
+            plt_sensor.set_ylabel(f'Sensor: {self.choicesen}s/{self.unidad_seleccionada}')
        
 
             # Crear un canvas para la figura de Matplotlib y agregarlo a la ventana de customtkinter
@@ -328,17 +369,19 @@ class VentanaSimulacion:
         print(f"Magnitud seleccionada: {choice}")
         # Actualiza las unidades en función de la magnitud seleccionada
         if choice == "Voltaje":
-            self.combobox_unidada.configure(values=["Va/V", "Va/mV"])
-        elif choice == "Corriente":
-            self.combobox_unidada.configure(values=["Ia/A", "Ia/mA","Ia/uA"])
-
+            self.combobox_unidada.configure(values=["V", "mV"])
+        elif choice == "Intensidad":
+            self.combobox_unidada.configure(values=["A", "mA","uA"])
+        elif choice == "Carga":
+            self.combobox_unidada.configure(values=["C", "mC","uC"])
+        
+        self.choiceac = choice[0]
     def guardar3_datos(self):
-        self.magnitud_seleccionadac = self.magac_var.get()
         self.unidad_seleccionadac = self.combobox_unidada.get()
         self.sensibilidad_ac = self.sa_var.get()
         self.valor_iniciala = self.via_var.get()
         
-        print(f"Magnitud: {self.magnitud_seleccionadac}, Unidad: {self.unidad_seleccionadac}, Sensibilidad: {self.sensibilidad_ac}, Valor inicial: {self.valor_iniciala}")
+        print(f"Magnitud: {self.choiceac}, Sensibilidad: {self.sensibilidad_ac}, Valor inicial: {self.valor_iniciala}")
         
         
 
@@ -351,7 +394,7 @@ class VentanaSimulacion:
         self.label_magnitudac = ctk.CTkLabel(self.principal, text="Magnitud de salida:", font=("Arial", 15), pady=25, padx=10)
         self.label_magnitudac.grid(row=2, column=0)
         
-        self.magniac = ["Voltaje", "Corriente"]
+        self.magniac = ["Voltaje", "Intensidad","Carga"]
         self.magac_var = ctk.StringVar(value=self.magniac[0])
         self.combobox_magniac = ctk.CTkComboBox(self.principal, values=self.magniac, command=self.seleccionar_maga)
         self.combobox_magniac.grid(row=2, column=2)
@@ -378,7 +421,9 @@ class VentanaSimulacion:
 
         if self.simulando:
             self.label_ecuacion_acondiconador = ctk.CTkLabel(self.principal, text=self.ecu_acondicionador, font=("Arial", 15), pady=30)
-            self.label_ecuacion_acondiconador.grid(row=6, column=0, columnspan=5)
+            self.label_ecuacion_acondiconador.grid(row=6, column=0, columnspan=3)
+            self.label_sensibilidad_acondicionador = ctk.CTkLabel(self.principal, text=f"Sa:{self.sensibilidad_ac}{self.unidad_seleccionadac}/{self.unidad_seleccionada}  V(0)a:{self.valor_iniciala}", font=("Arial", 15), pady=30)
+            self.label_sensibilidad_acondicionador.grid(row=6, column=3)
             
             # Crear una figura de Matplotlib
             fig_acondicionador = Figure(figsize=(5, 4), dpi=100)
@@ -389,8 +434,8 @@ class VentanaSimulacion:
             plt_acondicionador.plot(self.sensor, self.acondicionador, marker='o', linestyle='-')
             
             # Agregar nombres a los ejes
-            plt_acondicionador.set_xlabel(f'Sensor:{self.unidad_seleccionada}')
-            plt_acondicionador.set_ylabel(f'Acondicionador: {self.unidad_seleccionadac}')
+            plt_acondicionador.set_xlabel(f'Sensor:{self.choicesen}s/{self.unidad_seleccionada}')
+            plt_acondicionador.set_ylabel(f'Acondicionador: {self.choiceac}a/{self.unidad_seleccionadac}')
 
             # Crear un canvas para la figura de Matplotlib y agregarlo a la ventana de customtkinter
             canvas = FigureCanvasTkAgg(fig_acondicionador, master=self.principal)
@@ -456,7 +501,9 @@ class VentanaSimulacion:
 
         if(self.simulando==True and self.bandera_discretizador==True):
             self.label_ecuacion_discretizador = ctk.CTkLabel(self.principal, text=self.ecu_discretizador, font=("Arial", 15), pady=30)
-            self.label_ecuacion_discretizador.grid(row=7, column=0, columnspan=5)
+            self.label_ecuacion_discretizador.grid(row=7, column=0, columnspan=3)
+            self.label_sensibilidad_discretizador = ctk.CTkLabel(self.principal, text=f"Sd:{self.sensibilidad_di}CTA/{self.unidad_seleccionadac}  V(0)d:{self.valor_iniciald}", font=("Arial", 15), pady=30)
+            self.label_sensibilidad_discretizador.grid(row=7, column=3)
 
             # Crear una figura de Matplotlib
             fig_discretizador = Figure(figsize=(5, 4), dpi=100)
@@ -465,7 +512,7 @@ class VentanaSimulacion:
 
             plt_discretizador.plot(self.acondicionador, self.discretizador_int, marker='o', linestyle='')
 
-            plt_discretizador.set_xlabel(f'Acondicionador: {self.unidad_seleccionadac}')
+            plt_discretizador.set_xlabel(f'Acondicionador: {self.choiceac}a/{self.unidad_seleccionadac}')
             plt_discretizador.set_ylabel(f'Discretizador: Bd/CTAS')
 
             # # Crear un canvas para la figura de Matplotlib y agregarlo a la ventana de customtkinter
@@ -494,9 +541,6 @@ class VentanaSimulacion:
             self.label_ecuacion_emulador = ctk.CTkLabel(self.principal, text=self.ecu_emulador, font=("Arial", 15), pady=30)
             self.label_ecuacion_emulador.grid(row=1, column=0, columnspan=5)
 
-            
-
-
             # Crear una figura de Matplotlib
             fig_emulador = Figure(figsize=(5, 4), dpi=100)
             plt_emulador = fig_emulador.add_subplot(111)
@@ -504,11 +548,11 @@ class VentanaSimulacion:
             if self.bandera_discretizador == True:
                 plt_emulador.plot(self.discretizador_int, self.emulador, marker='o', linestyle='')
                 plt_emulador.set_xlabel(f'Discretizador: Bd/CTAS')
-                plt_emulador.set_ylabel(f'Emulador: {self.unidad}')
+                plt_emulador.set_ylabel(f'Emulador: {self.choiceori}/{self.unidad}')
             else:
                 plt_emulador.plot(self.acondicionador, self.emulador, marker='o', linestyle='')
-                plt_emulador.set_xlabel(f'Acondicionador: {self.unidad_seleccionadac}')
-                plt_emulador.set_ylabel(f'Emulador: {self.unidad}')
+                plt_emulador.set_xlabel(f'Acondicionador: {self.choiceac}/{self.unidad_seleccionadac}')
+                plt_emulador.set_ylabel(f'Emulador: {self.choiceori}/{self.unidad}')
 
             
 
@@ -547,7 +591,7 @@ class VentanaSimulacion:
             self.ecu_sen = str(self.inicialgono)
             
             
-        self.ecu_sensor = self.unidad_seleccionada+' = '+self.sensibilidad_sensor+' '+self.unidad+self.ecu_sen
+        self.ecu_sensor = self.choicesen+'s/'+self.unidad_seleccionada+' = '+self.sensibilidad_sensor+self.choiceori+'/'+self.unidad+self.ecu_sen
         # # # Generación de prueba
         self.mesurando = np.linspace(self.ri, self.rf, num=self.salto)
         self.sensor = (self.mesurando * self.sensibilidadgono) + self.inicialgono
@@ -570,7 +614,7 @@ class VentanaSimulacion:
         else:
             self.ecu_acon = str(self.valor_inicial_acgono)
         
-        self.ecu_acondicionador = self.unidad_seleccionadac+' = '+self.sensibilidad_ac+ self.unidad_seleccionada +self.ecu_acon
+        self.ecu_acondicionador = self.choiceac+'a/'+self.unidad_seleccionadac+' = '+self.sensibilidad_ac+self.choicesen+'s/'+self.unidad_seleccionada +self.ecu_acon
         
         self.ecu_ins = str(self.instru)
         
@@ -582,11 +626,11 @@ class VentanaSimulacion:
             self.ecu_ins2 = str(self.instru2)
     
 
-        self.ecu_instumento = 'BDAS =' +self.ecu_ins+self.unidad+''+self.ecu_ins2
+        self.ecu_instumento = 'bD/CTAS =' +self.ecu_ins+self.choiceori+'/'+self.unidad+self.ecu_ins2
 
                 
         if self.bandera_discretizador==True:
-            self.ecu_discretizador = 'BDAS/CTAS = '+self.sensibilidad_di+self.unidad_seleccionadac+ '+ 0.5'
+            self.ecu_discretizador = 'bD/CTAS = '+self.sensibilidad_di+self.choiceac+'a/'+self.unidad_seleccionadac+ '+ 0.5'
             self.sensibilidad_digono = float(self.sensibilidad_di)
         
             self.discretizador = (self.acondicionador * self.sensibilidad_digono) + 0.5
@@ -597,9 +641,12 @@ class VentanaSimulacion:
             self.sensibilidad_emulador = 1/(self.sensibilidadgono*self.sensibilidad_acgono*self.sensibilidad_digono)
             self.valor_inicial_em = (((((self.inicialgono*self.sensibilidad_acgono)+self.valor_inicial_acgono)*self.sensibilidad_digono)+0.5)/(self.sensibilidadgono*self.sensibilidad_acgono*self.sensibilidad_digono))*(-1)
             print('Aqui vamos')
-            print(self.sensibilidad_emulador)
-            print(self.valor_inicial_em)
-            self.ecu_emulador=str(self.sensibilidad_emulador)+' * (bD/CTAS) + '+str(self.valor_inicial_em)
+            
+            if self.valor_inicial_em > 0:
+                self.ecu_em1 = '+' + str(self.valor_inicial_em)
+            else:
+                self.ecu_em1 = str(self.valor_inicial_em)
+            self.ecu_emulador=self.choiceori+'/'+self.unidad+"="+str(self.sensibilidad_emulador)+'bD/CTAS'+self.ecu_em1
             self.emulador=(self.discretizador_int*self.sensibilidad_emulador)+self.valor_inicial_em
         else:
             pass
@@ -608,7 +655,7 @@ class VentanaSimulacion:
             print('Aqui vamos')
             print(self.sensibilidad_emulador)
             print(self.valor_inicial_em)
-            self.ecu_emulador=str(self.sensibilidad_emulador)+' * (volataje) + '+str(self.valor_inicial_em)
+            self.ecu_emulador=self.unidad+"="+str(self.sensibilidad_emulador)+'voltaje+ '+str(self.valor_inicial_em)
             self.emulador=(self.acondicionador*self.sensibilidad_emulador)+self.valor_inicial_em
 
 
@@ -1012,12 +1059,12 @@ class VentanaDiseno:
                 #Ecuacion Valor inicial emulador según libro
                 self.resvie1 = (-(self.sd * self.sa * self.inicialgono)-(self.sd * self.inicial_ac) - 0.5)/(self.sd * self.sa * self.sensibilidadgono)
                 
-                self.resrango = 'Rango:'+str(self.rf)+' a '+str(self.ri)
+                self.resrango = 'Rango:'+str(self.ri)+' a '+str(self.rf)
                 self.resresolucion = 'Resolución:' +self.resolucion
-                self.rescodigo = 'Código CAD:' +str(self.nresul)
+                self.rescodigo = 'N. bits:' +str(self.nresul)
                 self.resalcance = 'Alcance:' +str(self.alcanceres)
                 self.resvref = 'Vref:' +self.vref
-                self.ressd =  'BDAS/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
+                self.ressd =  'bD/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
                 if self.inicial_ac > 0:
                     self.ecu_acon = '+' + str(self.inicial_ac)
                 else:
@@ -1029,7 +1076,7 @@ class VentanaDiseno:
                 else:
                     self.ecu_vie = str(self.resvie1)
                 
-                self.resemulador = self.unidad+' = '+self.resolucion+'BDAS/CTAS'+self.ecu_vie
+                self.resemulador = self.unidad+' = '+self.resolucion+'bD/CTAS'+self.ecu_vie
                 
             elif(self.rf != 0 and self.n1 != 0 and self.vref1 != 0 and self.vie1 == 0):
                 #Caso 2
@@ -1047,12 +1094,12 @@ class VentanaDiseno:
                 #Ecuacion Valor inicial emulador según libro
                 self.resvie1 = (-(self.sd * self.sa2 * self.inicialgono)-(self.sd * self.inicial_ac) - 0.5)/(self.sd * self.sa * self.sensibilidadgono)
                 
-                self.resrango = 'Rango: '+self.rangoma+' a '+self.rangomi
+                self.resrango = 'Rango: '+self.rangomi+' a '+self.rangoma
                 self.resresolucion = 'Resolución:' +str(self.resolucion2)
-                self.rescodigo = 'Código CAD:' +self.n
+                self.rescodigo = 'N. bits:' +self.n
                 self.resalcance = 'Alcance:' +str(self.alcanceres)
                 self.resvref = 'Vref:' +self.vref
-                self.ressd =  'BDAS/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
+                self.ressd =  'bD/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
                 if self.inicial_ac > 0:
                     self.ecu_acon = '+' + str(self.inicial_ac)
                 else:
@@ -1082,12 +1129,12 @@ class VentanaDiseno:
                 #Ecuacion 4
                 self.inicial_ac = -(0.5/self.sd) - (self.sa * ((self.sensibilidadgono * self.rmin) + self.inicialgono))
                 
-                self.resrango = 'Rango:'+str(self.rmax)+' a '+str(self.rmin)
+                self.resrango = 'Rango:'+str(self.rmin)+' a '+str(self.rmax)
                 self.resresolucion = 'Resolución:' +self.resolucion
-                self.rescodigo = 'Código CAD:' +str(self.nresul)
+                self.rescodigo = 'N. bits:' +str(self.nresul)
                 self.resalcance = 'Alcance:' +self.alcance
                 self.resvref = 'Vref:' +self.vref
-                self.ressd =  'BDAS/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
+                self.ressd =  'bD/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
                 if self.inicial_ac > 0:
                     self.ecu_acon = '+' + str(self.inicial_ac)
                 else:
@@ -1100,7 +1147,7 @@ class VentanaDiseno:
                 else:
                     self.ecu_vie = str(self.vief)
                 
-                self.resemulador = self.unidad+' = '+self.resolucion+'BDAS/CTAS'+self.ecu_vie
+                self.resemulador = self.unidad+' = '+self.resolucion+'bD/CTAS'+self.ecu_vie
             else:
                 self.error = 'La información proporcionada no es correcta por lo tanto no se pueden observar los resultados.'
                 self.errors = 'Recordar que: Pandora versión 1.0 tiene 3 casos de diseño por favor revisar estos casos.'
@@ -1129,3 +1176,4 @@ class VentanaDiseno:
     def limpiarpanel(self):
         for widget in self.principal.winfo_children():
             widget.destroy()   
+            
