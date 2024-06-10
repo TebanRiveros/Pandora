@@ -99,33 +99,6 @@ class VentanaSimulacion:
         self.iemulador = ctk.CTkImage(light_image=Image.open(os.path.join(carpeta_imagenes, "imagen1.png")),dark_image=Image.open(os.path.join(carpeta_imagenes, "imagen1.png")), size=(90, 50))
         self.play = ctk.CTkImage(light_image=Image.open(os.path.join(carpeta_imagenes, "play.png")),dark_image=Image.open(os.path.join(carpeta_imagenes, "play.png")), size=(37, 30))
 
-        self.unidad_dict = {}
-        self.unidad_dict["Masa"] = ["ugr","mgr","cgr", "dgr","gr","Dgr","hgr", "Kgr","Mgr"]
-        self.unidad_dict["Presion"] = ["uPa","mPa","cPa", "dPa","Pa","DPa","hPa", "KPa","MPa"]
-        self.unidad_dict["Temperatura"] = ["°C", "K", "°F"]
-        self.unidad_dict["Iluminancia"] = ["lx"]
-        self.unidad_dict["Longitud"] = ["um","mm","cm", "dm","m","Dm","hm", "Km","Mm"]
-        self.unidad_dict["Resistividad"] = ["KΩ","Ω","mΩ"]
-        self.unidad_dict["Voltaje"] = ["v","mv","uv"]
-        self.unidad_dict["Intensidad"] = ["uA", "mA", "A"]
-        self.unidad_dict["Carga"] = ["C", "mC", "uC"]
-        self.unidad_dict["Sustancia"] = ["umol","mmol","cmol", "dmol","mol","Dmol","hmol", "Kmol","Mmol"]
-        self.unidad_dict["Frecuencia"] = ["mHz", "Hz", "KHz","MHz","GHz"]
-        self.unidad_dict["Fuerza"] = ["mN", "cN", "dN","N","DN","hN","kN"]
-        self.unidad_dict["Energía"] = ["mJ", "cJ", "dJ","J","DJ","hJ","kJ"]
-        self.unidad_dict["Potencia"] = ["mW", "cW", "dW","W","DW","hW","kW"]
-        self.unidad_dict["Flujo Mag"] = ["mWb", "cWb", "dWb","Wb","DWb","hWb","kWb"]
-        self.unidad_dict["Capacitancia"] = ["pF","uF","mF", "cF", "dF","F"]
-        self.unidad_dict["Inductancia"] = ["pH","uH","mH", "cH", "dH","H"]
-        
-        
-        
-        
-        self.unidad_2 = {}
-        self.unidad_2["Voltaje"] = ["v","mv","uv"]
-        self.unidad_2["Corriente"] = ["uA", "mA", "A"]
-        self.unidad_2["Carga"] = ["C", "mC", "uC"]
-
        
         self.bandera_discretizador=True
        
@@ -190,7 +163,7 @@ class VentanaSimulacion:
         elif choice == "Inductancia":
             self.combobox_unidad.configure(values=["pH","uH","mH", "cH", "dH","H"])
 
-        self.choiceori = choice[:2]
+        self.choiceori = choice[0]
     def guardari_datos(self):
         self.magnitud = self.magnitud_var.get()
         self.unidad = self.combobox_unidad.get()
@@ -200,7 +173,7 @@ class VentanaSimulacion:
         print(f"{self.choiceori}")
         
    
-# Configuración instrumento
+    # Configuración instrumento
     def instrumento_config(self):
         self.limpiarpanel()
         self.label_instrumento = ctk.CTkLabel(self.principal, text="INSTRUMENTO", font=("Arial Black", 20), padx=30)
@@ -256,7 +229,7 @@ class VentanaSimulacion:
             plt_instrumento.plot(self.mesurando, self.emulador, marker='o', linestyle='')
             
             plt_instrumento.set_xlabel(f'Mesurando:{self.choiceori}/{self.unidad}')
-            plt_instrumento.set_ylabel(f'Función de salida: FS/CTA')
+            plt_instrumento.set_ylabel(f'Función de salida (Me): Me/CTA')
             
             self.prueba = ctk.CTkLabel(self.principal, text=self.ecu_instumento, font=("Arial", 15), pady=30)
             self.prueba.grid(row=22, column=3)
@@ -280,7 +253,7 @@ class VentanaSimulacion:
         # Actualiza las unidades en función de la magnitud seleccionada
         if choice == "Voltaje":
             self.combobox_unidads.configure(values=["V", "mV"])
-        elif choice == "Intensidad":
+        elif choice == "Corriente":
             self.combobox_unidads.configure(values=["A", "mA","uA"])
         elif choice == "Carga":
             self.combobox_unidads.configure(values=["C", "mC","uC"])
@@ -295,7 +268,7 @@ class VentanaSimulacion:
         print(f"Magnitud: {self.choicesen}")
 
 
-#Configuracion sensor
+    #Configuracion sensor
     def sensor_config(self):
         self.limpiarpanel()
         self.label_instrumento = ctk.CTkLabel(self.principal, text="SENSOR", font=("Arial Black", 20), padx=30)
@@ -304,7 +277,7 @@ class VentanaSimulacion:
         self.label_magnitudsen = ctk.CTkLabel(self.principal, text="Magnitud de salida:", font=("Arial", 15),pady=25,padx=10)
         self.label_magnitudsen.grid(row=2, column=0)
         
-        self.magnisensor = ["Voltaje", "Intensidad","Carga"]
+        self.magnisensor = ["Voltaje", "Corriente","Carga"]
         self.magsensor_var = ctk.StringVar(value=self.magnisensor[0])
         self.combobox_magnisensor = ctk.CTkComboBox(self.principal, values=self.magnisensor, command=self.seleccionar_mag)
         self.combobox_magnisensor.grid(row=2, column=2)
@@ -370,7 +343,7 @@ class VentanaSimulacion:
         # Actualiza las unidades en función de la magnitud seleccionada
         if choice == "Voltaje":
             self.combobox_unidada.configure(values=["V", "mV"])
-        elif choice == "Intensidad":
+        elif choice == "Corriente":
             self.combobox_unidada.configure(values=["A", "mA","uA"])
         elif choice == "Carga":
             self.combobox_unidada.configure(values=["C", "mC","uC"])
@@ -385,7 +358,7 @@ class VentanaSimulacion:
         
         
 
-#Configuracion acondiconador
+    #Configuracion acondiconador
     def acondiconador_config(self):
         self.limpiarpanel()
         self.label_instrumento = ctk.CTkLabel(self.principal, text="ACONDICIONADOR", font=("Arial Black", 20), padx=30)
@@ -394,7 +367,7 @@ class VentanaSimulacion:
         self.label_magnitudac = ctk.CTkLabel(self.principal, text="Magnitud de salida:", font=("Arial", 15), pady=25, padx=10)
         self.label_magnitudac.grid(row=2, column=0)
         
-        self.magniac = ["Voltaje", "Intensidad","Carga"]
+        self.magniac = ["Voltaje", "Corriente","Carga"]
         self.magac_var = ctk.StringVar(value=self.magniac[0])
         self.combobox_magniac = ctk.CTkComboBox(self.principal, values=self.magniac, command=self.seleccionar_maga)
         self.combobox_magniac.grid(row=2, column=2)
@@ -581,38 +554,38 @@ class VentanaSimulacion:
         self.ri = float(self.rangomi)
         self.rf = float(self.rangoma)
         self.salto = int(self.salto)
-        self.sensibilidadgono = float(self.sensibilidad_sensor)
-        self.inicialgono = float(self.valor_inicial)
+        self.sensibilidadpr1 = float(self.sensibilidad_sensor)
+        self.inicialpr1 = float(self.valor_inicial)
         self.sensibilidad_dis = float(self.sensibilidad_di)
         #sensor
-        if self.inicialgono > 0:
-            self.ecu_sen = '+' + str(self.inicialgono)
+        if self.inicialpr1 > 0:
+            self.ecu_sen = '+' + str(self.inicialpr1)
         else:
-            self.ecu_sen = str(self.inicialgono)
+            self.ecu_sen = str(self.inicialpr1)
             
             
         self.ecu_sensor = self.choicesen+'s/'+self.unidad_seleccionada+' = '+self.sensibilidad_sensor+self.choiceori+'/'+self.unidad+self.ecu_sen
         # # # Generación de prueba
         self.mesurando = np.linspace(self.ri, self.rf, num=self.salto)
-        self.sensor = (self.mesurando * self.sensibilidadgono) + self.inicialgono
+        self.sensor = (self.mesurando * self.sensibilidadpr1) + self.inicialpr1
         
       
 
 
 
-        self.sensibilidad_acgono = float(self.sensibilidad_ac)
-        self.valor_inicial_acgono = float(self.valor_iniciala)
-        print(self.sensibilidad_acgono)
-        print(self.valor_inicial_acgono)
-        self.acondicionador = (self.sensor * self.sensibilidad_acgono) + self.valor_inicial_acgono
-        self.instru = (self.sensibilidadgono * self.sensibilidad_acgono * self.sensibilidad_dis)
-        self.instru2 = (((self.sensibilidad_acgono * self.inicialgono) + self.valor_inicial_acgono) * self.sensibilidad_dis) + 0.5
+        self.sensibilidad_acpr1 = float(self.sensibilidad_ac)
+        self.valor_inicial_acpr1 = float(self.valor_iniciala)
+        print(self.sensibilidad_acpr1)
+        print(self.valor_inicial_acpr1)
+        self.acondicionador = (self.sensor * self.sensibilidad_acpr1) + self.valor_inicial_acpr1
+        self.instru = (self.sensibilidadpr1 * self.sensibilidad_acpr1 * self.sensibilidad_dis)
+        self.instru2 = (((self.sensibilidad_acpr1 * self.inicialpr1) + self.valor_inicial_acpr1) * self.sensibilidad_dis) + 0.5
         
         
-        if self.valor_inicial_acgono > 0:
-            self.ecu_acon = '+' + str(self.valor_inicial_acgono)
+        if self.valor_inicial_acpr1 > 0:
+            self.ecu_acon = '+' + str(self.valor_inicial_acpr1)
         else:
-            self.ecu_acon = str(self.valor_inicial_acgono)
+            self.ecu_acon = str(self.valor_inicial_acpr1)
         
         self.ecu_acondicionador = self.choiceac+'a/'+self.unidad_seleccionadac+' = '+self.sensibilidad_ac+self.choicesen+'s/'+self.unidad_seleccionada +self.ecu_acon
         
@@ -631,15 +604,15 @@ class VentanaSimulacion:
                 
         if self.bandera_discretizador==True:
             self.ecu_discretizador = 'bD/CTAS = '+self.sensibilidad_di+self.choiceac+'a/'+self.unidad_seleccionadac+ '+ 0.5'
-            self.sensibilidad_digono = float(self.sensibilidad_di)
+            self.sensibilidad_dipr1 = float(self.sensibilidad_di)
         
-            self.discretizador = (self.acondicionador * self.sensibilidad_digono) + 0.5
+            self.discretizador = (self.acondicionador * self.sensibilidad_dipr1) + 0.5
         
             # # Convertir los valores de discretizador a enteros
             self.discretizador_int = self.discretizador.astype(int)
 
-            self.sensibilidad_emulador = 1/(self.sensibilidadgono*self.sensibilidad_acgono*self.sensibilidad_digono)
-            self.valor_inicial_em = (((((self.inicialgono*self.sensibilidad_acgono)+self.valor_inicial_acgono)*self.sensibilidad_digono)+0.5)/(self.sensibilidadgono*self.sensibilidad_acgono*self.sensibilidad_digono))*(-1)
+            self.sensibilidad_emulador = 1/(self.sensibilidadpr1*self.sensibilidad_acpr1*self.sensibilidad_dipr1)
+            self.valor_inicial_em = (((((self.inicialpr1*self.sensibilidad_acpr1)+self.valor_inicial_acpr1)*self.sensibilidad_dipr1)+0.5)/(self.sensibilidadpr1*self.sensibilidad_acpr1*self.sensibilidad_dipr1))*(-1)
             print('Aqui vamos')
             
             if self.valor_inicial_em > 0:
@@ -650,8 +623,8 @@ class VentanaSimulacion:
             self.emulador=(self.discretizador_int*self.sensibilidad_emulador)+self.valor_inicial_em
         else:
             pass
-            self.sensibilidad_emulador = 1/(self.sensibilidadgono*self.sensibilidad_acgono)
-            self.valor_inicial_em = ((((self.inicialgono*self.sensibilidad_acgono)+self.valor_inicial_acgono))/(self.sensibilidadgono*self.sensibilidad_acgono))*(-1)
+            self.sensibilidad_emulador = 1/(self.sensibilidadpr1*self.sensibilidad_acpr1)
+            self.valor_inicial_em = ((((self.inicialpr1*self.sensibilidad_acpr1)+self.valor_inicial_acpr1))/(self.sensibilidadpr1*self.sensibilidad_acpr1))*(-1)
             print('Aqui vamos')
             print(self.sensibilidad_emulador)
             print(self.valor_inicial_em)
@@ -667,12 +640,6 @@ class VentanaSimulacion:
             widget.destroy()
 
 
-        
-        
-
-
-
-    
 
 class VentanaDiseno:
     def __init__(self):
@@ -711,16 +678,6 @@ class VentanaDiseno:
         self.iemulador = ctk.CTkImage(light_image=Image.open(os.path.join(carpeta_imagenes, "imagen1.png")),dark_image=Image.open(os.path.join(carpeta_imagenes, "imagen1.png")), size=(90, 50))
         self.disenar = ctk.CTkImage(light_image=Image.open(os.path.join(carpeta_imagenes, "disenar.png")),dark_image=Image.open(os.path.join(carpeta_imagenes, "disenar.png")), size=(40, 30))
 
-        self.unidad_dict = {}
-        self.unidad_dict["Masa"] = ["M/gr", "M/Kgr"]
-        self.unidad_dict["Presion"] = ["P/Pa", "P/hPa", "P/kPa"]
-        self.unidad_dict["Temperatura"] = ["T/°C", "T/K", "T/°F"]
-        self.unidad_dict["Iluminancia"] = ["Ev/lx"]
-        self.unidad_dict["Longitud"] = ["L/m", "L/cm"]
-        
-        self.unidad_2 = {}
-        self.unidad_2["Voltaje"] = ["V/v","V/mv","V/uv"]
-        self.unidad_2["Corriente"] = ["I/uA", "I/mA", "I/A"]
         
         self.bandera_discretizador=True
         
@@ -743,25 +700,45 @@ class VentanaDiseno:
 
         self.root.mainloop()
         
-    def seleccionar_magnitud(self,eleccion):
-        print('PRUEBA')
-        lista_unidades = self.unidad_dict.get(eleccion, [])
-        # Ahora unidades_magnitud contendrá las unidades asociadas a la magnitud especificada
-        print(lista_unidades)
-        self.combobox_unidad.configure(values=lista_unidades)
-        
-    def seleccionar_mag(self,eleccion):
-        print('hola')
-        lista_unidad = self.unidad_2.get(eleccion, [])
-        # Ahora unidades_magnitud contendrá las unidades asociadas a la magnitud especificada
-        print(lista_unidad)
-        self.combobox_unidads.configure(values=lista_unidad)
-    def seleccionar_maga(self,eleccion):
-        print('hola')
-        lista_unidada = self.unidad_2.get(eleccion, [])
-        # Ahora unidades_magnitud contendrá las unidades asociadas a la magnitud especificada
-        print(lista_unidada)
-        self.combobox_unidada.configure(values=lista_unidada)
+    def seleccionar_magnitud(self, choice):
+        print(f"Magnitud seleccionada: {choice}")
+        # Actualiza las unidades en función de la magnitud seleccionada
+        if choice == "Masa":
+            self.combobox_unidad.configure(values=["ugr","mgr","cgr", "dgr","gr","Dgr","hgr", "Kgr","Mgr"])
+        elif choice == "Presion":
+            self.combobox_unidad.configure(values=["uPa","mPa","cPa", "dPa","Pa","DPa","hPa", "KPa","MPa"])
+        elif choice == "Temperatura":
+            self.combobox_unidad.configure(values=["°C", "K", "°F"])
+        elif choice == "Iluminancia":
+            self.combobox_unidad.configure(values=["lx"])
+        elif choice == "Longitud":
+            self.combobox_unidad.configure(values=["um","mm","cm", "dm","m","Dm","hm", "Km","Mm"])
+        elif choice == "Resistividad":
+            self.combobox_unidad.configure(values=["KΩ","Ω","mΩ"])
+        elif choice == "Voltaje":
+            self.combobox_unidad.configure(values=["v","mv","uv"])
+        elif choice == "Intensidad":
+            self.combobox_unidad.configure(values=["uA", "mA", "A"])
+        elif choice == "Carga":
+            self.combobox_unidad.configure(values=["C", "mC", "uC"])
+        elif choice == "Sustancia":
+            self.combobox_unidad.configure(values=["umol","mmol","cmol", "dmol","mol","Dmol","hmol", "Kmol","Mmol"])
+        elif choice == "Frecuencia":
+            self.combobox_unidad.configure(values=["mHz", "Hz", "KHz","MHz","GHz"])
+        elif choice == "Fuerza":
+            self.combobox_unidad.configure(values=["mN", "cN", "dN","N","DN","hN","kN"])
+        elif choice == "Energía":
+            self.combobox_unidad.configure(values=["mJ", "cJ", "dJ","J","DJ","hJ","kJ"])
+        elif choice == "Potencia":
+            self.combobox_unidad.configure(values=["mW", "cW", "dW","W","DW","hW","kW"])
+        elif choice == "Flujo Mag":
+            self.combobox_unidad.configure(values=["mWb", "cWb", "dWb","Wb","DWb","hWb","kWb"])
+        elif choice == "Capacitancia":
+            self.combobox_unidad.configure(values=["pF","uF","mF", "cF", "dF","F"])
+        elif choice == "Inductancia":
+            self.combobox_unidad.configure(values=["pH","uH","mH", "cH", "dH","H"])
+
+        self.choiceori = choice[0]
         
     def guardari_datos(self):
         self.magnitud = self.magnitud_var.get()
@@ -773,6 +750,7 @@ class VentanaDiseno:
         self.n = self.codigo_var.get()
         self.vref = self.ref_var.get()
         self.vie = self.vie_var.get()
+        print(f"{self.choiceori}")
         
 #Configuración de instrumento
     def instrumento_config(self):
@@ -784,7 +762,7 @@ class VentanaDiseno:
         self.label_magnitud.grid(row=6, column=0)
 
         # Combobox for selecting magnitudes
-        self.magnitudes = ["Masa", "Presion", "Temperatura", "Iluminancia", "Longitud"]
+        self.magnitudes = ["Masa", "Presion", "Temperatura", "Iluminancia", "Longitud","Resistividad","Voltaje","Intensidad","Carga","Sustancia","Frecuencia","Fuerza","Energía","Potencia","Flujo Mag","Capacitancia","Inductancia"]
         self.magnitud_var = ctk.StringVar(value=self.magnitudes[0])
         self.combobox_magnitudes = ctk.CTkComboBox(self.principal, values=self.magnitudes, command=self.seleccionar_magnitud)
         self.combobox_magnitudes.grid(row=6, column=3)
@@ -865,9 +843,13 @@ class VentanaDiseno:
         print(f"Magnitud seleccionada: {choice}")
         # Actualiza las unidades en función de la magnitud seleccionada
         if choice == "Voltaje":
-            self.combobox_unidads.configure(values=["Vs/V", "Vs/mV"])
+            self.combobox_unidads.configure(values=["V", "mV"])
         elif choice == "Corriente":
-            self.combobox_unidads.configure(values=["Is/A", "Is/mA","Is/uA"])
+            self.combobox_unidads.configure(values=["A", "mA","uA"])
+        elif choice == "Carga":
+            self.combobox_unidads.configure(values=["C", "mC","uC"])
+        
+        self.choicesen = choice[0]
 
     def guardar_datos(self):
         self.magnitud_seleccionada = self.magsensor_var.get()
@@ -884,7 +866,7 @@ class VentanaDiseno:
         self.label_magnitudsen = ctk.CTkLabel(self.principal, text="Magnitud de salida:", font=("Arial", 15),pady=25,padx=10)
         self.label_magnitudsen.grid(row=2, column=0)
         
-        self.magnisensor = ["Voltaje", "Corriente"]
+        self.magnisensor = ["Voltaje", "Corriente", "Carga"]
         self.magsensor_var = ctk.StringVar(value=self.magnisensor[0])
         self.combobox_magnisensor = ctk.CTkComboBox(self.principal, values=self.magnisensor, command=self.seleccionar_mag)
         self.combobox_magnisensor.grid(row=2, column=2)
@@ -927,10 +909,13 @@ class VentanaDiseno:
         print(f"Magnitud seleccionada: {choice}")
         # Actualiza las unidades en función de la magnitud seleccionada
         if choice == "Voltaje":
-            self.combobox_unidada.configure(values=["Va/V", "Va/mV"])
+            self.combobox_unidada.configure(values=["V", "mV"])
         elif choice == "Corriente":
-            self.combobox_unidada.configure(values=["Ia/A", "Ia/mA","Ia/uA"])
-
+            self.combobox_unidada.configure(values=["A", "mA","uA"])
+        elif choice == "Carga":
+            self.combobox_unidada.configure(values=["C", "mC","uC"])
+        
+        self.choiceac = choice[0]
     def guardar3_datos(self):
         self.magnitud_seleccionadac = self.magac_var.get()
         self.unidad_seleccionadac = self.combobox_unidada.get()
@@ -945,7 +930,7 @@ class VentanaDiseno:
         self.label_magnitudac = ctk.CTkLabel(self.principal, text="Magnitud de salida:", font=("Arial", 15),pady=25,padx=10)
         self.label_magnitudac.grid(row=2, column=0)
         
-        self.magniac = ["Voltaje", "Corriente"]
+        self.magniac = ["Voltaje", "Corriente", "Carga"]
         self.magac_var = ctk.StringVar(value=self.magniac[0])
         self.combobox_magniac = ctk.CTkComboBox(self.principal, values=self.magniac, command=self.seleccionar_maga)
         self.combobox_magniac.grid(row=2, column=2)
@@ -1023,8 +1008,8 @@ class VentanaDiseno:
             self.alcance1 = float(self.alcance)
             self.n1 = float(self.n)
             self.vref1 = float(self.vref)
-            self.sensibilidadgono = float(self.sensibilidad_sensor)
-            self.inicialgono = float(self.valor_inicial)
+            self.sensibilidadpr1 = float(self.sensibilidad_sensor)
+            self.inicialpr1 = float(self.valor_inicial)
             self.vie1 = float(self.vie)
         
             
@@ -1033,12 +1018,12 @@ class VentanaDiseno:
             
             #sensor
             
-            if self.inicialgono > 0:
-                self.ecu_sen = '+' + str(self.inicialgono)
+            if self.inicialpr1 > 0:
+                self.ecu_sen = '+' + str(self.inicialpr1)
             else:
-                self.ecu_sen = str(self.inicialgono)
+                self.ecu_sen = str(self.inicialpr1)
                 
-            self.ecu_sensor = self.unidad_seleccionada+ ' = '+self.sensibilidad_sensor+' '+self.unidad+self.ecu_sen
+            self.ecu_sensor = self.choicesen+'/'+self.unidad_seleccionada+ ' = '+self.sensibilidad_sensor+self.choiceori+'/'+self.unidad+self.ecu_sen
             
             
             #Caso 1
@@ -1051,32 +1036,32 @@ class VentanaDiseno:
                 #Ecuacion 2
                 self.sd = (2**self.nresul)/self.vref1
                 #Ecuacion 3
-                self.sa = 1/(self.resolucion1 * self.sensibilidadgono * self.sd)
+                self.sa = 1/(self.resolucion1 * self.sensibilidadpr1 * self.sd)
                 #Ecuacion 4
-                self.inicial_ac = -(0.5/self.sd) - (self.sa * ((self.sensibilidadgono * self.ri) + self.inicialgono))
+                self.inicial_ac = -(0.5/self.sd) - (self.sa * ((self.sensibilidadpr1 * self.ri) + self.inicialpr1))
                 #Ecuacion 5
                 self.alcanceres = (self.rf - self.ri)
                 #Ecuacion Valor inicial emulador según libro
-                self.resvie1 = (-(self.sd * self.sa * self.inicialgono)-(self.sd * self.inicial_ac) - 0.5)/(self.sd * self.sa * self.sensibilidadgono)
+                self.resvie1 = (-(self.sd * self.sa * self.inicialpr1)-(self.sd * self.inicial_ac) - 0.5)/(self.sd * self.sa * self.sensibilidadpr1)
                 
                 self.resrango = 'Rango:'+str(self.ri)+' a '+str(self.rf)
                 self.resresolucion = 'Resolución:' +self.resolucion
                 self.rescodigo = 'N. bits:' +str(self.nresul)
                 self.resalcance = 'Alcance:' +str(self.alcanceres)
                 self.resvref = 'Vref:' +self.vref
-                self.ressd =  'bD/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
+                self.ressd =  'bD/CTAS = ' +str(self.sd)+self.choiceac+'/'+self.unidad_seleccionadac+ ' + 0.5' 
                 if self.inicial_ac > 0:
                     self.ecu_acon = '+' + str(self.inicial_ac)
                 else:
                     self.ecu_acon = str(self.inicial_ac)
             
-                self.ressa = self.unidad_seleccionadac+' = '+str(self.sa)+self.unidad_seleccionada+self.ecu_acon
+                self.ressa = self.choiceac+'/'+self.unidad_seleccionadac+' = '+str(self.sa)+self.choicesen+'/'+self.unidad_seleccionada+self.ecu_acon
                 if self.resvie1 > 0:
                     self.ecu_vie = '+' + str(self.resvie1)
                 else:
                     self.ecu_vie = str(self.resvie1)
                 
-                self.resemulador = self.unidad+' = '+self.resolucion+'bD/CTAS'+self.ecu_vie
+                self.resemulador = self.choiceori+'/'+self.unidad+' = '+self.resolucion+'bD/CTAS'+self.ecu_vie
                 
             elif(self.rf != 0 and self.n1 != 0 and self.vref1 != 0 and self.vie1 == 0):
                 #Caso 2
@@ -1084,34 +1069,34 @@ class VentanaDiseno:
                 #se coge ecuación 2
                 self.sd = (2**self.nresul)/self.vref1
                 #Ecuación 6
-                self.sa2 = ((2**self.n1)-1)/(self.sd * self.sensibilidadgono * (self.rf - self.ri))
+                self.sa2 = ((2**self.n1)-1)/(self.sd * self.sensibilidadpr1 * (self.rf - self.ri))
                 #Ecuación 7
-                self.resolucion2 = 1/(self.sd * self.sa2 * self.sensibilidadgono)
+                self.resolucion2 = 1/(self.sd * self.sa2 * self.sensibilidadpr1)
                 #Se coge ecuación 4 para el valor inicial del acondicionador
-                self.inicial_ac = -(0.5/self.sd) - (self.sa2 * ((self.sensibilidadgono * self.ri) + self.inicialgono))
+                self.inicial_ac = -(0.5/self.sd) - (self.sa2 * ((self.sensibilidadpr1 * self.ri) + self.inicialpr1))
                 #Ecuacion 5
                 self.alcanceres = (self.rf - self.ri)
                 #Ecuacion Valor inicial emulador según libro
-                self.resvie1 = (-(self.sd * self.sa2 * self.inicialgono)-(self.sd * self.inicial_ac) - 0.5)/(self.sd * self.sa * self.sensibilidadgono)
+                self.resvie1 = (-(self.sd * self.sa2 * self.inicialpr1)-(self.sd * self.inicial_ac) - 0.5)/(self.sd * self.sa * self.sensibilidadpr1)
                 
                 self.resrango = 'Rango: '+self.rangomi+' a '+self.rangoma
                 self.resresolucion = 'Resolución:' +str(self.resolucion2)
                 self.rescodigo = 'N. bits:' +self.n
                 self.resalcance = 'Alcance:' +str(self.alcanceres)
                 self.resvref = 'Vref:' +self.vref
-                self.ressd =  'bD/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
+                self.ressd =  'bD/CTAS = ' +str(self.sd)+self.choiceac+'/'+self.unidad_seleccionadac+ ' + 0.5'
                 if self.inicial_ac > 0:
                     self.ecu_acon = '+' + str(self.inicial_ac)
                 else:
                     self.ecu_acon = str(self.inicial_ac)
             
-                self.ressa = self.unidad_seleccionadac+' = '+str(self.sa)+self.unidad_seleccionada+self.ecu_acon
+                self.ressa = self.choiceac+'/'+self.unidad_seleccionadac+' = '+str(self.sa)+self.choicesen+'/'+self.unidad_seleccionada+self.ecu_acon
                 if self.resvie1 > 0:
                     self.ecu_vie = '+' + str(self.resvie1)
                 else:
                     self.ecu_vie = str(self.resvie1)
                 
-                self.resemulador = self.unidad+' = '+str(self.resolucion2)+'BDAS/CTAS'+self.ecu_vie
+                self.resemulador = self.choiceori+'/'+self.unidad+' = '+self.resolucion+'bD/CTAS'+self.ecu_vie
             elif(self.alcance1 != 0 and self.resolucion1 != 0 and self.vref1 != 0 and self.vie1 != 0):
                 #Caso 3
                 #En este caso tienen que dar: Alcance, resolución, vref, valor inicial emulador y sensor}
@@ -1121,33 +1106,33 @@ class VentanaDiseno:
                 #Ecuación 2
                 self.sd = (2**self.nresul)/self.vref1
                 #Ecuación 3
-                self.sa = 1/(self.resolucion1 * self.sensibilidadgono * self.sd)
+                self.sa = 1/(self.resolucion1 * self.sensibilidadpr1 * self.sd)
                 #Ecuacion 8
                 self.rmin = round(self.vie1)
                 #Ecuacion 9
                 self.rmax = self.alcance1 + self.rmin
                 #Ecuacion 4
-                self.inicial_ac = -(0.5/self.sd) - (self.sa * ((self.sensibilidadgono * self.rmin) + self.inicialgono))
+                self.inicial_ac = -(0.5/self.sd) - (self.sa * ((self.sensibilidadpr1 * self.rmin) + self.inicialpr1))
                 
                 self.resrango = 'Rango:'+str(self.rmin)+' a '+str(self.rmax)
                 self.resresolucion = 'Resolución:' +self.resolucion
                 self.rescodigo = 'N. bits:' +str(self.nresul)
                 self.resalcance = 'Alcance:' +self.alcance
                 self.resvref = 'Vref:' +self.vref
-                self.ressd =  'bD/CTAS = ' +str(self.sd)+self.unidad_seleccionadac+ ' + 0.5' 
+                self.ressd =  'bD/CTAS = ' +str(self.sd)+self.choiceac+'/'+self.unidad_seleccionadac+ ' + 0.5' 
                 if self.inicial_ac > 0:
                     self.ecu_acon = '+' + str(self.inicial_ac)
                 else:
                     self.ecu_acon = str(self.inicial_ac)
             
-                self.ressa = self.unidad_seleccionadac+' = '+str(self.sa)+self.unidad_seleccionada+self.ecu_acon
+                self.ressa = self.choiceac+'/'+self.unidad_seleccionadac+' = '+str(self.sa)+self.choicesen+'/'+self.unidad_seleccionada+self.ecu_acon
                 self.vief = float(self.vie)
                 if self.vief > 0:
                     self.ecu_vie = '+' + str(self.vief)
                 else:
                     self.ecu_vie = str(self.vief)
                 
-                self.resemulador = self.unidad+' = '+self.resolucion+'bD/CTAS'+self.ecu_vie
+                self.resemulador = self.choiceori+'/'+self.unidad+' = '+self.resolucion+'bD/CTAS'+self.ecu_vie
             else:
                 self.error = 'La información proporcionada no es correcta por lo tanto no se pueden observar los resultados.'
                 self.errors = 'Recordar que: Pandora versión 1.0 tiene 3 casos de diseño por favor revisar estos casos.'
@@ -1160,8 +1145,8 @@ class VentanaDiseno:
                 
             else:
                 pass
-                self.sensibilidad_emulador = 1/(self.sensibilidadgono*self.sensibilidad_acgono)
-                self.valor_inicial_em = ((((self.inicialgono*self.sensibilidad_acgono)+self.valor_inicial_acgono))/(self.sensibilidadgono*self.sensibilidad_acgono))*(-1)
+                self.sensibilidad_emulador = 1/(self.sensibilidadpr1*self.sensibilidad_acpr1)
+                self.valor_inicial_em = ((((self.inicialpr1*self.sensibilidad_acpr1)+self.valor_inicial_acpr1))/(self.sensibilidadpr1*self.sensibilidad_acpr1))*(-1)
                 print('Aqui vamos')
                 print(self.sensibilidad_emulador)
                 print(self.valor_inicial_em)
